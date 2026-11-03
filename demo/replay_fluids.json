@@ -1,0 +1,8 @@
+{
+  "p1e1": {"read": "\\frac{p}{\\rho g} + \\frac{v^2}{2g} + z = H"},
+  "p1e2": {"read": "p = p_0 + \\rho g h"},
+  "p1e3": {"read": "A_1 v_1 = A_2 v_2"},
+  "p1e4": {"read": "h_f = f \\frac{D}{L} \\frac{v^2}{2g}", "repair": "h_f = f \\frac{D}{L} \\frac{v^2}{2g}"},
+  "p1e5": {"read": "Re = \\frac{\\rho v D}{\\mu}"},
+  "p1e6": {"read": "F_x = \\dot{m}(v_2 - v_1)", "repair": "F_x = -\\dot{m}(v_2 - v_1)"}
+}

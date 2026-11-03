@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Legible — verified STEM accessibility</title>
+<style>
+  :root {
+    --bg: #fbfaf7; --ink: #1c1a17; --muted: #57534d;
+    --line: #d8d2c6; --blue: #14496b; --green: #1c6b3a;
+    --amber: #8a5a00; --red: #8a1c1c; --chip: #efeae0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 17px/1.55 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  }
+  header { border-bottom: 1px solid var(--line); padding: 1.2rem 1.5rem; }
+  main { max-width: 52rem; margin: 0 auto; padding: 1.5rem; }
+  h1 { font-size: 1.7rem; margin: 0 0 .3rem; }
+  h2 { font-size: 1.25rem; margin: 1.8rem 0 .6rem; }
+  p.lede { color: var(--muted); margin: 0; }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 10px;
+          padding: 1.2rem; margin-top: 1rem; }
+  label { display: block; font-weight: 600; margin-bottom: .4rem; }
+  .row { display: flex; gap: .8rem; flex-wrap: wrap; align-items: center; }
+  input[type="file"] { flex: 1 1 18rem; }
+  button {
+    font: inherit; font-weight: 600; color: #fff; background: var(--blue);
+    border: 0; border-radius: 8px; padding: .65rem 1.1rem; cursor: pointer;
+  }
+  button:disabled { background: #8a97a1; cursor: not-allowed; }
+  :focus-visible { outline: 3px solid #b1521b; outline-offset: 2px; }
+  ul.progress { list-style: none; padding: 0; margin: .6rem 0 0; }
+  ul.progress li { display: flex; gap: .6rem; align-items: baseline;
+                   padding: .45rem 0; border-bottom: 1px dashed var(--line); }
+  ul.progress li:last-child { border-bottom: 0; }
+  .chip { font-size: .8rem; font-weight: 700; text-transform: uppercase;
+          letter-spacing: .03em; padding: .15rem .5rem; border-radius: 999px;
+          background: var(--chip); color: var(--muted); white-space: nowrap; }
+  .chip.verified { background: #dcefe2; color: var(--green); }
+  .chip.repaired { background: #f6ecd2; color: var(--amber); }
+  .chip.withheld { background: #f5dcdc; color: var(--red); }
+  .chip.reading  { background: #e2e9ef; color: var(--blue); }
+  .why { color: var(--muted); }
+  .summary { font-weight: 600; margin-top: 1rem; }
+  .links a { display: inline-block; margin-right: 1.2rem; font-weight: 600; }
+  .hidden { display: none; }
+  .status-error { color: var(--red); font-weight: 700; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Legible</h1>
+  <p class="lede">Verified STEM accessibility. Upload an engineering lecture PDF; every
+  equation is checked three ways and anything that cannot be proven is withheld, never guessed.</p>
+</header>
+
+<main>
+  <h2 id="upload-heading">Upload a lecture PDF</h2>
+  <div class="card">
+    <form id="upload-form" novalidate>
+      <label for="file-input">PDF file (maximum 20&nbsp;MB)</label>
+      <div class="row">
+        <input id="file-input" name="file" type="file" accept="application/pdf,.pdf"
+               aria-describedby="file-hint" required>
+        <button id="upload-button" type="submit">Verify this PDF</button>
+      </div>
+      <p id="file-hint" class="why">Only born-digital PDFs with a real text layer can be
+      verified. Scanned pages are reported as unverified.</p>
+    </form>
+  </div>
+
+  <h2 id="progress-heading">Progress</h2>
+  <div class="card">
+    <p id="progress-status">No job yet. Choose a PDF and activate “Verify this PDF”.</p>
+
+    <!-- Live region: every progress change is announced politely. -->
+    <ul id="progress-list" class="progress" aria-live="polite" aria-relevant="additions text"></ul>
+  </div>
+
+  <div id="results" class="card hidden" tabindex="-1" role="region" aria-labelledby="results-heading">
+    <h2 id="results-heading">Results</h2>
+    <p id="results-summary" class="summary"></p>
+    <p class="links">
+      <a id="page-link" href="#" target="_blank" rel="noopener">Open the accessible page (opens in a new tab)</a>
+      <a id="report-link" href="#" target="_blank" rel="noopener">Open the verification report (opens in a new tab)</a>
+    </p>
+  </div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var form = document.getElementById("upload-form");
+  var input = document.getElementById("file-input");
+  var button = document.getElementById("upload-button");
+  var statusP = document.getElementById("progress-status");
+  var list = document.getElementById("progress-list");
+  var results = document.getElementById("results");
+  var summaryP = document.getElementById("results-summary");
+  var pageLink = document.getElementById("page-link");
+  var reportLink = document.getElementById("report-link");
+  var MAX_BYTES = 20 * 1024 * 1024;
+  var source = null;
+
+  function say(text) { statusP.textContent = text; }
+
+  function addRow(id) {
+    var li = document.createElement("li");
+    li.id = "eq-" + id;
+    var chip = document.createElement("span");
+    chip.className = "chip reading";
+    chip.textContent = "reading";
+    var label = document.createElement("span");
+    label.className = "eq-id mono";
+    label.textContent = id;
+    var why = document.createElement("span");
+    why.className = "why";
+    why.textContent = "looking at the equation…";
+    li.appendChild(chip);
+    li.appendChild(label);
+    li.appendChild(why);
+    list.appendChild(li);
+    return li;
+  }
+
+  function updateRow(id, status, why) {
+    var li = document.getElementById("eq-" + id);
+    if (!li) { li = addRow(id); }
+    var chip = li.querySelector(".chip");
+    chip.className = "chip " + status;
+    chip.textContent = status;
+    li.querySelector(".why").textContent = why || "";
+  }
+
+  function finish(summary) {
+    say("Finished. " + summary.verified + " verified, " + summary.repaired +
+        " repaired, " + summary.withheld + " withheld.");
+    summaryP.textContent = summary.verified + " verified · " + summary.repaired +
+        " repaired · " + summary.withheld + " withheld.";
+    results.classList.remove("hidden");
+    results.focus();          // move focus to the results region for the screen reader
+  }
+
+  function onEvent(ev) {
+    if (ev.type === "equation_start") {
+      addRow(ev.id);
+    } else if (ev.type === "equation_done") {
+      updateRow(ev.id, ev.status, ev.why);
+    } else if (ev.type === "page") {
+      say("Page " + ev.page + " of " + ev.pages + ": " + ev.equations +
+          " equation" + (ev.equations === 1 ? "" : "s") + " found.");
+    } else if (ev.type === "done") {
+      finish(ev);
+    } else if (ev.type === "error") {
+      say("Problem: " + ev.message);
+    }
+  }
+
+  function listen(jobId) {
+    source = new EventSource("/jobs/" + jobId + "/events");
+    source.onmessage = function (e) {
+      try { onEvent(JSON.parse(e.data)); }
+      catch (err) { /* ignore malformed frame */ }
+    };
+    source.onerror = function () {
+      // EventSource retries on its own; close once the server has finished.
+      if (results.classList.contains("hidden") === false) { source.close(); }
+    };
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    results.classList.add("hidden");
+    list.innerHTML = "";
+
+    var file = input.files && input.files[0];
+    if (!file) { say("Please choose a PDF file first."); input.focus(); return; }
+    if (file.size > MAX_BYTES) {
+      say("That file is " + (file.size / 1048576).toFixed(1) + " MB; the limit is 20 MB.");
+      input.focus();
+      return;
+    }
+
+    button.disabled = true;
+    say("Uploading “" + file.name + "”…");
+
+    var data = new FormData();
+    data.append("file", file, file.name);
+
+    fetch("/jobs", { method: "POST", body: data })
+      .then(function (r) {
+        if (!r.ok) { return r.json().then(function (b) { throw new Error(b.detail || r.status); }); }
+        return r.json();
+      })
+      .then(function (job) {
+        say("Job started. Verifying equations…");
+        pageLink.href = "/jobs/" + job.id + "/page";
+        reportLink.href = "/jobs/" + job.id + "/report";
+        listen(job.id);
+      })
+      .catch(function (err) {
+        say("Upload failed: " + err.message);
+      })
+      .finally(function () { button.disabled = false; });
+  });
+
+  // Closing the stream on page unload keeps the server tidy.
+  window.addEventListener("beforeunload", function () { if (source) { source.close(); } });
+})();
+</script>
+</body>
+</html>

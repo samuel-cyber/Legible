@@ -1,0 +1,1829 @@
+{
+  "note": "Ground truth for the evaluation. Each entry ties an equation's true LaTeX to the PDF and page bbox it was read from. Entries under eval/pdfs/ were generated from the published LaTeX source by eval/gold_from_tex.py; the demo entries were transcribed with the source in demo/pages/fluids.tex.",
+  "equations": [
+    {
+      "id": "p1e1",
+      "pdf": "demo/pages/fluids.pdf",
+      "page": 0,
+      "bbox": [
+        262.4280090332031,
+        177.24481201171875,
+        348.1294860839844,
+        207.71438598632812
+      ],
+      "latex": "\\frac{p}{\\rho g} + \\frac{v^2}{2g} + z = H"
+    },
+    {
+      "id": "p1e2",
+      "pdf": "demo/pages/fluids.pdf",
+      "page": 0,
+      "bbox": [
+        272.57208251953125,
+        301.567138671875,
+        337.6801452636719,
+        316.32025146484375
+      ],
+      "latex": "p = p_0 + \\rho g h"
+    },
+    {
+      "id": "p1e3",
+      "pdf": "demo/pages/fluids.pdf",
+      "page": 0,
+      "bbox": [
+        272.91912841796875,
+        400.962158203125,
+        336.8332214355469,
+        415.71527099609375
+      ],
+      "latex": "A_1 v_1 = A_2 v_2"
+    },
+    {
+      "id": "p1e4",
+      "pdf": "demo/pages/fluids.pdf",
+      "page": 0,
+      "bbox": [
+        274.1470947265625,
+        476.46173095703125,
+        334.51763916015625,
+        506.9313659667969
+      ],
+      "latex": "h_f = f \\frac{L}{D} \\frac{v^2}{2g}"
+    },
+    {
+      "id": "p1e5",
+      "pdf": "demo/pages/fluids.pdf",
+      "page": 0,
+      "bbox": [
+        277.60699462890625,
+        566.8350830078125,
+        331.1513977050781,
+        595.3854370117188
+      ],
+      "latex": "Re = \\frac{\\rho v D}{\\mu}"
+    },
+    {
+      "id": "p1e6",
+      "pdf": "demo/pages/fluids.pdf",
+      "page": 0,
+      "bbox": [
+        259.7519836425781,
+        654.4381713867188,
+        350.50067138671875,
+        669.8021850585938
+      ],
+      "latex": "F_x = -\\dot{m}(v_2 - v_1)"
+    },
+    {
+      "id": "uh_p1e1",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 1,
+      "bbox": [
+        150.83,
+        419.68,
+        404.59,
+        435.64
+      ],
+      "latex": "+ : F(I) \\times F(I) \\to F(I), \\cdot : \\mathbb R \\times F(I) \\to F(I),"
+    },
+    {
+      "id": "uh_p1e2",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 1,
+      "bbox": [
+        134.11,
+        460.32,
+        421.28,
+        476.28
+      ],
+      "latex": "(u + v)(x) = u(x) + v(x), (cu)(x) = cu(x), x \\in I."
+    },
+    {
+      "id": "uh_p1e3",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 1,
+      "bbox": [
+        168.55,
+        614.35,
+        386.87,
+        630.38
+      ],
+      "latex": "C(I) = \\{ u \\in F(I) \\mid \\text{$u$ is continuous on $I$}\\}."
+    },
+    {
+      "id": "uh_p2e4",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 2,
+      "bbox": [
+        132.39,
+        163.08,
+        422.97,
+        180.78
+      ],
+      "latex": "C^k(I) = \\{ u \\in C(I) \\mid u', \\dots, u^{(k)} \\in C(I)\\}, k = 1,2,\\dots."
+    },
+    {
+      "id": "uh_p2e5",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 2,
+      "bbox": [
+        152.17,
+        227.02,
+        403.24,
+        269.2
+      ],
+      "latex": "L^p(I) = \\{u \\in F(I) \\mid \\int_I |u(x)|^p dx < \\infty \\}, p \\ge 1."
+    },
+    {
+      "id": "uh_p2e6",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 2,
+      "bbox": [
+        203.01,
+        295.86,
+        352.4,
+        338.62
+      ],
+      "latex": "\\|u\\|_{L^p(I)} = \\left( \\int_I |u(x)|^p dx \\right)^{\\frac1p}."
+    },
+    {
+      "id": "uh_p2e7",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 2,
+      "bbox": [
+        144.58,
+        350.58,
+        410.83,
+        392.75
+      ],
+      "latex": "(u, v) = \\int_I u(x) v(x) dx, (\\cdot, \\cdot) : L^2(I) \\times L^2(I) \\to \\mathbb R."
+    },
+    {
+      "id": "uh_p2e8",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 2,
+      "bbox": [
+        239.27,
+        484.95,
+        315.65,
+        501.73
+      ],
+      "latex": "1, x, x^2, \\dots, x^n"
+    },
+    {
+      "id": "uh_p2e9",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 2,
+      "bbox": [
+        246.49,
+        540.7,
+        308.92,
+        558.51
+      ],
+      "latex": "\\mathbb P_n \\subset C^k(I)"
+    },
+    {
+      "id": "uh_p2e10",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 2,
+      "bbox": [
+        217.21,
+        598.41,
+        338.2,
+        615.27
+      ],
+      "latex": "C^k(I) \\subset L^2(I) \\subset F(I)."
+    },
+    {
+      "id": "uh_p2e11",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 2,
+      "bbox": [
+        208.22,
+        676.09,
+        347.18,
+        692.05
+      ],
+      "latex": "(u, v) \\le \\|u\\| \\|v\\| u,v \\in V."
+    },
+    {
+      "id": "uh_p3e12",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 3,
+      "bbox": [
+        202.33,
+        133.13,
+        353.08,
+        149.16
+      ],
+      "latex": "(u - s, v) = 0 \\text{for all $v \\in S$}."
+    },
+    {
+      "id": "uh_p3e13",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 3,
+      "bbox": [
+        253.06,
+        293.94,
+        302.35,
+        308.56
+      ],
+      "latex": "I = [0,1]"
+    },
+    {
+      "id": "uh_p3e14",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 3,
+      "bbox": [
+        186.48,
+        422.53,
+        368.93,
+        439.39
+      ],
+      "latex": "\\mathcal V = \\{ v \\in C^1(I) : v(0) = v(1) = 0 \\},"
+    },
+    {
+      "id": "uh_p3e15",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 3,
+      "bbox": [
+        198.9,
+        477.52,
+        356.52,
+        495.22
+      ],
+      "latex": "(u', v') = (f, v) \\text{for all $v \\in \\mathcal V$}."
+    },
+    {
+      "id": "uh_p3e16",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 3,
+      "bbox": [
+        187.4,
+        617.03,
+        368.02,
+        634.74
+      ],
+      "latex": "a(u, v) = (u', v'), a : \\mathcal V \\times \\mathcal V \\to \\mathbb R,"
+    },
+    {
+      "id": "uh_p3e17",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 3,
+      "bbox": [
+        205.92,
+        674.1,
+        349.49,
+        690.06
+      ],
+      "latex": "L(v) = (f,v), L : \\mathcal V \\to \\mathbb R."
+    },
+    {
+      "id": "uh_p4e18",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 4,
+      "bbox": [
+        197.62,
+        260.46,
+        357.79,
+        277.44
+      ],
+      "latex": "a(u_S,v) = L(v) \\text{for all $v \\in S$}."
+    },
+    {
+      "id": "uh_p4e19",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 4,
+      "bbox": [
+        197.62,
+        408.76,
+        357.79,
+        425.73
+      ],
+      "latex": "a(u_S,v) = L(v) \\text{for all $v \\in S$}."
+    },
+    {
+      "id": "uh_p4e20",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 4,
+      "bbox": [
+        199.9,
+        530.93,
+        355.5,
+        546.95
+      ],
+      "latex": "a(u, v) = L(v) \\text{for all $v \\in V$}."
+    },
+    {
+      "id": "uh_p4e21",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 4,
+      "bbox": [
+        195.63,
+        568.73,
+        359.77,
+        585.71
+      ],
+      "latex": "a(u-u_S,v) = 0 \\text{for all $v \\in S$}."
+    },
+    {
+      "id": "uh_p4e22",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 4,
+      "bbox": [
+        143.17,
+        617.89,
+        412.24,
+        634.79
+      ],
+      "latex": "a(u-u_S,v) = a(u, v) - a(u_S, v) = L(v) - L(v) = 0."
+    },
+    {
+      "id": "uh_p5e23",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 5,
+      "bbox": [
+        204.37,
+        264.26,
+        351.05,
+        281.16
+      ],
+      "latex": "0 = x_0 < x_1 < \\dots < x_n = 1,"
+    },
+    {
+      "id": "uh_p5e24",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 5,
+      "bbox": [
+        196.47,
+        425.17,
+        358.88,
+        442.07
+      ],
+      "latex": "\\mathcal I_h u(x_i) = u(x_i), i=0,\\dots,n."
+    },
+    {
+      "id": "uh_p5e25",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 5,
+      "bbox": [
+        192.27,
+        501.53,
+        363.14,
+        519.41
+      ],
+      "latex": "\\|u - \\mathcal I_h u\\|_{L^\\infty(I)} \\lesssim \\|(h \\partial)^2 u\\|_{L^\\infty(I)}."
+    },
+    {
+      "id": "uh_p6e26",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 6,
+      "bbox": [
+        210.37,
+        278.3,
+        345.04,
+        295.25
+      ],
+      "latex": "c_1 \\phi_1 + \\dots + c_{n-1} \\phi_{n-1} = 0"
+    },
+    {
+      "id": "uh_p6e27",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 6,
+      "bbox": [
+        186.28,
+        481.95,
+        369.13,
+        499.65
+      ],
+      "latex": "a(u, v) = (u', v'), a : V \\times V \\to \\mathbb R,"
+    },
+    {
+      "id": "uh_p6e28",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 6,
+      "bbox": [
+        199.9,
+        606.16,
+        355.5,
+        622.19
+      ],
+      "latex": "a(u, v) = L(v) \\text{for all $v \\in V$},"
+    },
+    {
+      "id": "uh_p7e29",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 7,
+      "bbox": [
+        217.45,
+        362.04,
+        337.95,
+        404.22
+      ],
+      "latex": "(u,v) = \\int_I u(x)v(x)dx."
+    },
+    {
+      "id": "uh_p7e30",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 7,
+      "bbox": [
+        169.25,
+        608.89,
+        386.14,
+        625.79
+      ],
+      "latex": "\\|u-v\\|_X < \\delta \\implies \\|Au-Av\\|_Y < \\epsilon."
+    },
+    {
+      "id": "uh_p7e31",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 7,
+      "bbox": [
+        140.06,
+        656.97,
+        415.35,
+        673.87
+      ],
+      "latex": "\\|Au-Av\\|_Y = \\|A(u-v)\\|_Y \\le C \\|u-v\\|_X < C \\delta = \\epsilon."
+    },
+    {
+      "id": "uh_p8e32",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 8,
+      "bbox": [
+        232.43,
+        166.91,
+        321.86,
+        183.81
+      ],
+      "latex": "\\|Au\\|_Y \\le C \\|u\\|_X"
+    },
+    {
+      "id": "uh_p8e33",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 8,
+      "bbox": [
+        237.95,
+        316.18,
+        317.46,
+        333.08
+      ],
+      "latex": "\\|Au\\|_Y \\le p(u),"
+    },
+    {
+      "id": "uh_p8e34",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 8,
+      "bbox": [
+        227.44,
+        505.52,
+        327.98,
+        521.47
+      ],
+      "latex": "\\{x \\in I \\mid u(x) \\ne 0\\}."
+    },
+    {
+      "id": "uh_p9e35",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 9,
+      "bbox": [
+        221.86,
+        257.84,
+        333.55,
+        274.74
+      ],
+      "latex": "K = [x_L + \\delta, x_R - \\delta]."
+    },
+    {
+      "id": "uh_p9e36",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 9,
+      "bbox": [
+        230.86,
+        410.64,
+        324.54,
+        427.55
+      ],
+      "latex": "\\|u1_K - u\\| \\le 1/j."
+    },
+    {
+      "id": "uh_p9e37",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 9,
+      "bbox": [
+        125.19,
+        489.69,
+        430.22,
+        506.59
+      ],
+      "latex": "\\|u_j - u\\| \\le \\|u_j - u1_K\\| + \\|u1_K - u\\| \\le 2/j \\to 0, j \\to \\infty."
+    },
+    {
+      "id": "uh_p9e38",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 9,
+      "bbox": [
+        183.92,
+        660.05,
+        371.5,
+        679.87
+      ],
+      "latex": "L_u(\\phi) = L_v(\\phi), \\text{for all $\\phi \\in C_0^\\infty(I)$}."
+    },
+    {
+      "id": "uh_p10e39",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 10,
+      "bbox": [
+        182.23,
+        120.74,
+        373.19,
+        137.59
+      ],
+      "latex": "A(w) = (u - v, w), A : L^2(I) \\to \\mathbb R,"
+    },
+    {
+      "id": "uh_p10e40",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 10,
+      "bbox": [
+        183.76,
+        242.89,
+        371.65,
+        262.7
+      ],
+      "latex": "L(\\phi) = (-1)^k (f, \\phi^{(k)}), \\phi \\in C_0^\\infty(I)."
+    },
+    {
+      "id": "uh_p11e41",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 11,
+      "bbox": [
+        163.01,
+        228.82,
+        392.4,
+        246.52
+      ],
+      "latex": "(-1)^2 (u, \\phi'') = (-1)^2 (u, (\\phi')') = (-1) (w, \\phi')."
+    },
+    {
+      "id": "uh_p11e42",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 11,
+      "bbox": [
+        234.84,
+        295.76,
+        320.57,
+        315.57
+      ],
+      "latex": "L : C_0^\\infty(I) \\to \\mathbb R,"
+    },
+    {
+      "id": "uh_p11e43",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 11,
+      "bbox": [
+        166.91,
+        395.07,
+        388.5,
+        412.77
+      ],
+      "latex": "H^k(I) = \\{ u \\in L^2(I) \\mid u', \\dots, u^{(k)} \\in L^2(I)\\}."
+    },
+    {
+      "id": "uh_p11e44",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 11,
+      "bbox": [
+        204.01,
+        493.16,
+        351.4,
+        512.02
+      ],
+      "latex": "(u,v)_{H^1(I)} = (u,v) + (u', v')."
+    },
+    {
+      "id": "uh_p12e45",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 12,
+      "bbox": [
+        157.09,
+        220.97,
+        398.32,
+        238.14
+      ],
+      "latex": "\\|E u\\|_{L^2(\\mathbb R)} \\lesssim \\|u\\|_{L^2(I)}, \\|E u\\|_{H^1(\\mathbb R)} \\lesssim \\|u\\|_{H^1(I)}."
+    },
+    {
+      "id": "uh_p12e46",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 12,
+      "bbox": [
+        223.48,
+        296.13,
+        331.93,
+        313.24
+      ],
+      "latex": "\\|u\\|_{L^\\infty(I)} \\lesssim \\|u\\|_{H^1(I)}."
+    },
+    {
+      "id": "uh_p12e47",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 12,
+      "bbox": [
+        166.37,
+        334.08,
+        389.04,
+        353.05
+      ],
+      "latex": "H_0^1(I) = \\{u \\in H^1(I) \\mid u(x_L) = 0 = u(x_R) \\}."
+    },
+    {
+      "id": "uh_p12e48",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 12,
+      "bbox": [
+        189.39,
+        394.43,
+        366.02,
+        414.25
+      ],
+      "latex": "\\|u\\|_{H^1(I)} \\lesssim \\|u'\\|_{L^2(I)}, u \\in H_0^1(I)."
+    },
+    {
+      "id": "uh_p12e49",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 12,
+      "bbox": [
+        214.97,
+        525.16,
+        340.44,
+        544.12
+      ],
+      "latex": "I = [0,1], V = H_0^1(I),"
+    },
+    {
+      "id": "uh_p12e50",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 12,
+      "bbox": [
+        186.28,
+        563.23,
+        369.13,
+        580.93
+      ],
+      "latex": "a(u, v) = (u', v'), a : V \\times V \\to \\mathbb R."
+    },
+    {
+      "id": "uh_p12e51",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 12,
+      "bbox": [
+        205.36,
+        632.34,
+        350.05,
+        648.3
+      ],
+      "latex": "L(v) = (f, v), L : V \\to \\mathbb R."
+    },
+    {
+      "id": "uh_p13e52",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 13,
+      "bbox": [
+        199.9,
+        119.55,
+        355.5,
+        135.58
+      ],
+      "latex": "a(u, v) = L(v) \\text{for all $v \\in V$},"
+    },
+    {
+      "id": "uh_p13e53",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 13,
+      "bbox": [
+        187.01,
+        286.54,
+        368.4,
+        302.5
+      ],
+      "latex": "Av = a(u,v) - L(v), A : V \\to \\mathbb R,"
+    },
+    {
+      "id": "uh_p13e54",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 13,
+      "bbox": [
+        192.11,
+        488.78,
+        363.3,
+        506.65
+      ],
+      "latex": "\\|(h\\partial)(u-u_h)\\| \\lesssim \\|(h \\partial)^2 u\\|_{L^\\infty(I)}."
+    },
+    {
+      "id": "uh_p13e55",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 13,
+      "bbox": [
+        187.43,
+        672.35,
+        367.97,
+        692.17
+      ],
+      "latex": "\\|w\\|_E^2 = a(w,w) = \\|w'\\|^2, w \\in V,"
+    },
+    {
+      "id": "uh_p14e56",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 14,
+      "bbox": [
+        234.99,
+        242.3,
+        320.41,
+        260.1
+      ],
+      "latex": "\\mathcal I_h : H^1(I) \\to S."
+    },
+    {
+      "id": "uh_p14e57",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 14,
+      "bbox": [
+        183.94,
+        286.17,
+        371.48,
+        304.18
+      ],
+      "latex": "\\|\\mathcal I_h u\\|_{H^1(I)} \\lesssim \\|u\\|_{H^1(I)}, u \\in H^1(I)."
+    },
+    {
+      "id": "uh_p14e58",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 14,
+      "bbox": [
+        182.51,
+        334.33,
+        372.9,
+        353.19
+      ],
+      "latex": "\\|\\mathcal I_h u\\|_{H^1(I)} \\lesssim \\|u\\|_{H^1(I)}, u \\in C^\\infty(I)."
+    },
+    {
+      "id": "uh_p14e59",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 14,
+      "bbox": [
+        130.04,
+        379.77,
+        425.37,
+        397.79
+      ],
+      "latex": "\\|\\mathcal I_h u\\| \\lesssim \\|\\mathcal I_h u\\|_{L^\\infty(I)} \\le \\|u\\|_{L^\\infty(I)} \\lesssim \\|u\\|_{H^1(I)}, u \\in H^1(I),"
+    },
+    {
+      "id": "uh_p14e60",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 14,
+      "bbox": [
+        190.65,
+        423.41,
+        364.76,
+        442.28
+      ],
+      "latex": "\\|\\partial \\mathcal I_h u\\| \\lesssim \\|u\\|_{H^1(I)}, u \\in C^\\infty(I)."
+    },
+    {
+      "id": "uh_p14e61",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 14,
+      "bbox": [
+        208.49,
+        469.32,
+        346.93,
+        502.56
+      ],
+      "latex": "\\partial \\mathcal I_h u|_{I_i} = \\frac{u(x_i) - u(x_{i-1})}{x_i - x_{i-1}}."
+    },
+    {
+      "id": "uh_p14e62",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 14,
+      "bbox": [
+        140.81,
+        517.65,
+        414.61,
+        560.66
+      ],
+      "latex": "u(x_i) - u(x_{i-1}) = \\int_{I_i} u'(x) dx \\le |x_i - x_{i-1}|^{\\frac12} \\|u'\\|_{L^2(I_i)}."
+    },
+    {
+      "id": "uh_p15e63",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 15,
+      "bbox": [
+        229.25,
+        130.42,
+        326.16,
+        170.73
+      ],
+      "latex": "\\mathcal I_h u = \\sum_{i=0}^n u(x_i) \\phi_i,"
+    },
+    {
+      "id": "uh_p15e64",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 15,
+      "bbox": [
+        148.52,
+        203.97,
+        406.89,
+        244.27
+      ],
+      "latex": "\\|\\mathcal I_h u\\|_{H^1(I)} \\le \\|u\\|_{L^\\infty(I)} \\sum_{i=0}^n \\|\\phi_i\\|_{H^1(I)} \\le C_h \\|u\\|_{H^1(I)},"
+    },
+    {
+      "id": "uh_p15e65",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 15,
+      "bbox": [
+        133.71,
+        429.73,
+        421.7,
+        447.54
+      ],
+      "latex": "\\|u - \\mathcal I_h u\\| + \\|(h\\partial)(u - \\mathcal I_h u)\\| \\lesssim \\|(h\\partial)^2 u\\|, u \\in H^2(I)."
+    },
+    {
+      "id": "uh_p15e66",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 15,
+      "bbox": [
+        173.24,
+        520.11,
+        382.18,
+        562.29
+      ],
+      "latex": "w(x) = \\int_\\xi^x w'(y) dy \\le |x - \\xi|^{\\frac12} \\|w'\\|_{L^2(I_i)},"
+    },
+    {
+      "id": "uh_p15e67",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 15,
+      "bbox": [
+        129.96,
+        570.17,
+        446.1,
+        613.18
+      ],
+      "latex": "\\|w\\|_{L^2(I_i)}^2 \\le \\int_{I_i} |x - \\xi| dx\\, \\|w'\\|_{L^2(I_i)}^2 \\le h^2 \\|w'\\|_{L^2(I_i)}^2 = \\|(h\\partial) w\\|_{L^2(I_i)}^2."
+    },
+    {
+      "id": "uh_p15e68",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 15,
+      "bbox": [
+        197.12,
+        632.62,
+        441.85,
+        652.56
+      ],
+      "latex": "\\|(h\\partial)(u - \\mathcal I_h u)\\|_{L^2(I_i)}^2 \\le \\|(h\\partial)^2 (u - \\mathcal I_h u)\\|_{L^2(I_i)}^2 = \\|(h\\partial)^2 u\\|_{L^2(I_i)}^2,"
+    },
+    {
+      "id": "uh_p15e69",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 15,
+      "bbox": [
+        127.17,
+        672.79,
+        428.24,
+        692.73
+      ],
+      "latex": "\\|(u - \\mathcal I_h u)\\|_{L^2(I_i)}^2 \\le \\|(h\\partial)(u - \\mathcal I_h u)\\|_{L^2(I_i)}^2 \\le \\|(h\\partial)^2 u\\|_{L^2(I_i)}^2."
+    },
+    {
+      "id": "uh_p16e70",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 16,
+      "bbox": [
+        247.86,
+        349.11,
+        307.57,
+        365.07
+      ],
+      "latex": "L : H \\to \\mathbb R"
+    },
+    {
+      "id": "uh_p16e71",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 16,
+      "bbox": [
+        217.15,
+        386.8,
+        338.25,
+        402.75
+      ],
+      "latex": "L(v) = (u,v), v \\in H."
+    },
+    {
+      "id": "uh_p16e72",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 16,
+      "bbox": [
+        220.47,
+        627.89,
+        334.94,
+        645.7
+      ],
+      "latex": "\\|u-u_h\\| \\lesssim \\|(h \\partial)^2 u\\|."
+    },
+    {
+      "id": "uh_p16e73",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 16,
+      "bbox": [
+        176.9,
+        673.2,
+        378.52,
+        691.01
+      ],
+      "latex": "\\|u-u_h\\|^2 = L(u - u_h) = a(w, u - u_h)."
+    },
+    {
+      "id": "uh_p17e74",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 17,
+      "bbox": [
+        226.09,
+        119.74,
+        329.32,
+        136.64
+      ],
+      "latex": "a(\\mathcal I_h w, u - u_h) = 0."
+    },
+    {
+      "id": "uh_p17e75",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 17,
+      "bbox": [
+        122.26,
+        159.6,
+        433.16,
+        177.41
+      ],
+      "latex": "\\|u-u_h\\|^2 = a(w - \\mathcal I_h w, u - u_h) \\le \\|\\partial(w - \\mathcal I_h)\\|\\|\\partial(u-u_h)\\|."
+    },
+    {
+      "id": "uh_p17e76",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 17,
+      "bbox": [
+        230.71,
+        200.58,
+        324.7,
+        219.23
+      ],
+      "latex": "\\|w''\\| = \\|u - u_h\\|."
+    },
+    {
+      "id": "uh_p17e77",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 17,
+      "bbox": [
+        202.63,
+        242.07,
+        352.78,
+        259.88
+      ],
+      "latex": "\\|(h\\partial)(w - \\mathcal I_h)\\| \\lesssim \\|(h\\partial)^2 w\\|."
+    },
+    {
+      "id": "uh_p17e78",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 17,
+      "bbox": [
+        173.98,
+        282.72,
+        381.44,
+        300.52
+      ],
+      "latex": "\\|u-u_h\\| \\le \\|(h\\partial)(u-u_h)\\| \\lesssim \\|(h \\partial)^2 u\\|."
+    },
+    {
+      "id": "uh_p17e79",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 17,
+      "bbox": [
+        192.17,
+        450.18,
+        363.24,
+        469.15
+      ],
+      "latex": "a(u_h,v) = L(v) \\text{for all $v \\in P_{h,0}^k$}."
+    },
+    {
+      "id": "uh_p17e80",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 17,
+      "bbox": [
+        155.96,
+        585.95,
+        399.38,
+        616.86
+      ],
+      "latex": "\\xi_m = x_{i-1} + \\frac m k (x_i - x_{i-1}) \\in I_i, m = 0,\\dots,k."
+    },
+    {
+      "id": "uh_p17e81",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 17,
+      "bbox": [
+        213.81,
+        650.58,
+        341.61,
+        691.2
+      ],
+      "latex": "\\mathcal L_m(x) = \\prod_{l=0,l \\ne m}^k \\frac{x - \\xi_l}{\\xi_m - \\xi_l}."
+    },
+    {
+      "id": "uh_p18e82",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 18,
+      "bbox": [
+        173.18,
+        120.8,
+        382.23,
+        161.02
+      ],
+      "latex": "\\mathcal I^k_{h,i} u(x) = \\sum_{m=0}^k u(\\xi_m) \\mathcal L_m(x), u \\in C(I_i)."
+    },
+    {
+      "id": "uh_p18e83",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 18,
+      "bbox": [
+        177.56,
+        298.45,
+        377.85,
+        317.42
+      ],
+      "latex": "\\|\\mathcal I_{h,i}^k u\\|_{H^1(I_i)} \\lesssim \\|u\\|_{H^1(I_i)}, u \\in H^1(I_i)."
+    },
+    {
+      "id": "uh_p18e84",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 18,
+      "bbox": [
+        126.2,
+        339.88,
+        450.04,
+        380.09
+      ],
+      "latex": "\\sum_{m=0}^{l+1} \\|(h\\partial)^m (u - \\mathcal I_{h,i}^k u)\\|_{L^2(I_i)} \\lesssim \\|(h\\partial)^{l+1} u\\|_{L^2(I_i)}, u \\in H^{l+1}(I_i)."
+    },
+    {
+      "id": "uh_p18e85",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 18,
+      "bbox": [
+        199.98,
+        413.2,
+        355.44,
+        431.01
+      ],
+      "latex": "\\|(h\\partial)(u-u_h)\\| \\lesssim \\|(h \\partial)^{l+1} u\\|,"
+    },
+    {
+      "id": "uh_p18e86",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 18,
+      "bbox": [
+        215.87,
+        482.05,
+        339.55,
+        499.86
+      ],
+      "latex": "\\|u-u_h\\| \\lesssim \\|(h \\partial)^{l+1} u\\|."
+    },
+    {
+      "id": "uh_p18e87",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 18,
+      "bbox": [
+        177.55,
+        673.2,
+        377.86,
+        692.17
+      ],
+      "latex": "V = H_0^1(\\Omega) = \\{u \\in H^1(\\Omega) \\mid u|_{\\partial \\Omega} = 0\\},"
+    },
+    {
+      "id": "uh_p19e88",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 19,
+      "bbox": [
+        199.9,
+        198.07,
+        355.5,
+        214.1
+      ],
+      "latex": "a(u, v) = L(v) \\text{for all $v \\in V$}."
+    },
+    {
+      "id": "uh_p19e89",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 19,
+      "bbox": [
+        243.08,
+        278.45,
+        312.33,
+        295.35
+      ],
+      "latex": "\\mathcal I_h : V \\to V_h,"
+    },
+    {
+      "id": "uh_p19e90",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 19,
+      "bbox": [
+        175.04,
+        316.01,
+        380.37,
+        334.02
+      ],
+      "latex": "\\|(h\\nabla)(u - \\mathcal I_h u)\\|_{L^2(\\Omega)} \\lesssim \\|(hD)^2 u\\|_{L^2(\\Omega)},"
+    },
+    {
+      "id": "uh_p19e91",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 19,
+      "bbox": [
+        216.81,
+        425.37,
+        338.61,
+        443.39
+      ],
+      "latex": "\\|D^2 u\\|_{L^2(\\Omega)} \\lesssim \\|f\\|_{L^2(\\Omega)}."
+    },
+    {
+      "id": "uh_p19e92",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 19,
+      "bbox": [
+        195.82,
+        534.29,
+        359.59,
+        551.27
+      ],
+      "latex": "a(u_h,v) = L(v) \\text{for all $v \\in V_h$},"
+    },
+    {
+      "id": "uh_p19e93",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 19,
+      "bbox": [
+        136.9,
+        571.8,
+        418.52,
+        589.82
+      ],
+      "latex": "\\|u - u_h\\|_{L^2(\\Omega)} + \\|(h\\nabla)(u - u_h)\\|_{L^2(\\Omega)} \\lesssim \\|(hD)^2 u\\|_{L^2(\\Omega)}."
+    },
+    {
+      "id": "uh_p19e94",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 19,
+      "bbox": [
+        190.16,
+        611.16,
+        365.26,
+        628.28
+      ],
+      "latex": "\\|\\cdot\\| = \\|\\cdot\\|_{L^2(\\Omega)}, \\|\\cdot\\|_E = a(\\cdot, \\cdot),"
+    },
+    {
+      "id": "uh_p20e95",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 20,
+      "bbox": [
+        165.3,
+        219.24,
+        390.11,
+        237.04
+      ],
+      "latex": "\\|(h\\nabla)(w - \\mathcal I_h)\\| \\lesssim \\|h^2 D^2 w\\| \\lesssim h^2 \\|u - u_h\\|,"
+    },
+    {
+      "id": "uh_p20e96",
+      "pdf": "eval/pdfs/lec_notes.pdf",
+      "page": 20,
+      "bbox": [
+        194.0,
+        374.4,
+        361.4,
+        406.63
+      ],
+      "latex": "a(u,v) = \\int_\\Omega (\\nabla u \\cdot \\nabla v + q u v)\\, dx."
+    },
+    {
+      "id": "ffns_p8e1",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 8,
+      "bbox": [
+        88.77,
+        79.97,
+        150.21,
+        93.66
+      ],
+      "latex": "\\nabla\\phi= \\left(\\frac{\\partial\\phi}{\\partial x}, \\frac{\\partial\\phi}{\\partial y}, \\frac{\\partial\\phi}{\\partial z}\\right)."
+    },
+    {
+      "id": "ffns_p10e2",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 10,
+      "bbox": [
+        155.03,
+        74.51,
+        299.7,
+        129.48
+      ],
+      "latex": "\\frac{d\\mathbf{X}}{dt} =\\bm{u}(\\mathbf{X}(\\bm{\\xi},t),t)."
+    },
+    {
+      "id": "ffns_p10e3",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 10,
+      "bbox": [
+        178.31,
+        147.7,
+        279.81,
+        176.25
+      ],
+      "latex": "\\boxed{\\frac{D\\phi}{Dt} =\\frac{\\partial\\phi}{\\partial t} +\\bm{u}\\cdot\\nabla\\phi}."
+    },
+    {
+      "id": "ffns_p11e4",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 11,
+      "bbox": [
+        138.45,
+        84.95,
+        316.28,
+        113.5
+      ],
+      "latex": "\\frac{d\\phi}{dt} =\\frac{\\partial\\phi}{\\partial t} +\\frac{dx}{dt}\\frac{\\partial\\phi}{\\partial x} +\\frac{dy}{dt}\\frac{\\partial\\phi}{\\partial y} +\\frac{dz}{dt}\\frac{\\partial\\phi}{\\partial z}."
+    },
+    {
+      "id": "ffns_p11e5",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 11,
+      "bbox": [
+        148.99,
+        147.71,
+        304.53,
+        176.26
+      ],
+      "latex": "\\boxed{ \\frac{D\\phi}{Dt} =\\frac{\\partial\\phi}{\\partial t} +u\\frac{\\partial\\phi}{\\partial x} +v\\frac{\\partial\\phi}{\\partial y} +w\\frac{\\partial\\phi}{\\partial z}}"
+    },
+    {
+      "id": "ffns_p12e6",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 12,
+      "bbox": [
+        160.75,
+        78.63,
+        296.17,
+        107.18
+      ],
+      "latex": "\\boxed{ \\bm{a} =\\frac{D\\bm{u}}{Dt} =\\frac{\\partial\\bm{u}}{\\partial t} +(\\bm{u}\\cdot\\nabla)\\bm{u} }."
+    },
+    {
+      "id": "ffns_p12e7",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 12,
+      "bbox": [
+        180.52,
+        126.6,
+        273.02,
+        156.22
+      ],
+      "latex": "a_i=\\frac{\\partial u_i}{\\partial t} +u_j\\frac{\\partial u_i}{\\partial x_j},"
+    },
+    {
+      "id": "ffns_p14e8",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 14,
+      "bbox": [
+        132.1,
+        68.86,
+        322.63,
+        102.07
+      ],
+      "latex": "\\frac{D\\bm{u}}{Dt} =\\underbrace{\\frac{\\partial\\bm{u}}{\\partial t}}_{\\text{local acceleration}} +\\underbrace{(\\bm{u}\\cdot\\nabla)\\bm{u}}_{\\text{advective acceleration}}."
+    },
+    {
+      "id": "ffns_p15e9",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 15,
+      "bbox": [
+        195.27,
+        112.75,
+        262.85,
+        141.3
+      ],
+      "latex": "\\boxed{\\frac{d}{dt}|\\Omega(t)|=0}."
+    },
+    {
+      "id": "ffns_p18e10",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 18,
+      "bbox": [
+        103.14,
+        60.1,
+        354.98,
+        88.65
+      ],
+      "latex": "\\boxed{ \\frac{\\partial\\rho}{\\partial t} +\\nabla\\cdot(\\rho\\bm{u})=0 } \\Longleftrightarrow \\boxed{ \\frac{D\\rho}{Dt}+\\rho\\nabla\\cdot\\bm{u}=0 }."
+    },
+    {
+      "id": "ffns_p18e11",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 18,
+      "bbox": [
+        146.98,
+        119.71,
+        307.75,
+        148.27
+      ],
+      "latex": "\\frac{D\\rho}{Dt}=0 \\Longrightarrow \\boxed{\\nabla\\cdot\\bm{u}=0}."
+    },
+    {
+      "id": "ffns_p19e12",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 19,
+      "bbox": [
+        192.33,
+        124.43,
+        264.59,
+        140.34
+      ],
+      "latex": "\\boxed{\\bm{t}_p(\\bm{n})=-p\\bm{n}}."
+    },
+    {
+      "id": "ffns_p22e13",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 22,
+      "bbox": [
+        173.71,
+        78.95,
+        283.21,
+        95.0
+      ],
+      "latex": "\\boxed{\\mathbf{F}_{p,\\mathrm{parcel}} \\approx-(\\nabla p)\\,\\delta V}."
+    },
+    {
+      "id": "ffns_p22e14",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 22,
+      "bbox": [
+        161.87,
+        163.06,
+        291.65,
+        179.11
+      ],
+      "latex": "\\mathbf{F}_{p,\\mathrm{surroundings}} \\approx+(\\nabla p)\\,\\delta V."
+    },
+    {
+      "id": "ffns_p23e15",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 23,
+      "bbox": [
+        200.46,
+        151.58,
+        253.07,
+        167.49
+      ],
+      "latex": "\\bm{t}_p=-p\\bm{n}."
+    },
+    {
+      "id": "ffns_p24e16",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 24,
+      "bbox": [
+        166.71,
+        186.38,
+        290.21,
+        202.43
+      ],
+      "latex": "\\boxed{\\mathbf{F}_{\\mathrm{total}} \\approx(-\\nabla p+\\rho\\bm g)\\,\\delta V}."
+    },
+    {
+      "id": "ffns_p25e17",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 25,
+      "bbox": [
+        159.28,
+        86.19,
+        294.24,
+        114.74
+      ],
+      "latex": "\\rho\\,\\delta V\\,\\frac{D\\bm{u}}{Dt} =(-\\nabla p+\\rho\\bm g)\\,\\delta V."
+    },
+    {
+      "id": "ffns_p25e18",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 25,
+      "bbox": [
+        179.39,
+        130.6,
+        277.53,
+        159.15
+      ],
+      "latex": "\\boxed{ \\rho\\frac{D\\bm{u}}{Dt}=-\\nabla p+\\rho\\bm g}."
+    },
+    {
+      "id": "ffns_p26e19",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 26,
+      "bbox": [
+        157.19,
+        72.57,
+        300.93,
+        101.12
+      ],
+      "latex": "\\boxed{ \\frac{\\partial\\bm{u}}{\\partial t} +(\\bm{u}\\cdot\\nabla)\\bm{u} =-\\frac{1}{\\rho}\\nabla p+\\bm{b}}."
+    },
+    {
+      "id": "ffns_p28e20",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 28,
+      "bbox": [
+        205.76,
+        81.79,
+        247.77,
+        95.48
+      ],
+      "latex": "\\bm{t}(\\bm{n})\\,dS,"
+    },
+    {
+      "id": "ffns_p30e21",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 30,
+      "bbox": [
+        127.3,
+        112.8,
+        180.63,
+        127.55
+      ],
+      "latex": "\\boxed{\\bm{t}(\\bm{n})=\\bm{\\sigma}\\bm{n}}, t_i=\\sigma_{ij}n_j."
+    },
+    {
+      "id": "ffns_p32e22",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 32,
+      "bbox": [
+        178.83,
+        82.79,
+        278.09,
+        111.34
+      ],
+      "latex": "\\boxed{\\rho\\frac{D\\bm{u}}{Dt} =\\nabla\\cdot\\bm{\\sigma}+\\rho\\bm{b}}."
+    },
+    {
+      "id": "ffns_p33e23",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 33,
+      "bbox": [
+        150.22,
+        85.73,
+        303.32,
+        115.41
+      ],
+      "latex": "t_i=\\sigma_{ij}n_j, (\\nabla\\cdot\\bm{\\sigma})_i =\\frac{\\partial\\sigma_{ij}}{\\partial x_j}."
+    },
+    {
+      "id": "ffns_p33e24",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 33,
+      "bbox": [
+        148.67,
+        127.2,
+        308.25,
+        165.97
+      ],
+      "latex": "\\boxed{ \\rho\\left( \\frac{\\partial u_i}{\\partial t} +u_j\\frac{\\partial u_i}{\\partial x_j} \\right) =\\frac{\\partial\\sigma_{ij}}{\\partial x_j} +\\rho b_i}."
+    },
+    {
+      "id": "ffns_p34e25",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 34,
+      "bbox": [
+        161.0,
+        109.13,
+        292.54,
+        137.68
+      ],
+      "latex": "\\rho\\frac{D\\bm{u}}{Dt} =-\\nabla p+\\nabla\\cdot\\bm{\\tau}+\\rho\\bm{b}."
+    },
+    {
+      "id": "ffns_p35e26",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 35,
+      "bbox": [
+        87.51,
+        179.86,
+        153.43,
+        194.77
+      ],
+      "latex": "\\operatorname{tr}\\mathbf{D}=\\nabla\\cdot\\bm{u}."
+    },
+    {
+      "id": "ffns_p36e27",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 36,
+      "bbox": [
+        149.58,
+        72.7,
+        303.96,
+        87.61
+      ],
+      "latex": "d\\bm{u}=(\\nabla\\bm{u})\\,d\\bm{x} =\\mathbf{D}\\,d\\bm{x}+\\mathbf{W}\\,d\\bm{x}."
+    },
+    {
+      "id": "ffns_p37e28",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 37,
+      "bbox": [
+        172.91,
+        180.69,
+        280.62,
+        195.6
+      ],
+      "latex": "\\bm{\\tau}=2\\mu\\mathbf{D} +\\lambda(\\nabla\\cdot\\bm{u})\\mathbf{I}."
+    },
+    {
+      "id": "ffns_p38e29",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 38,
+      "bbox": [
+        172.91,
+        51.9,
+        284.01,
+        66.81
+      ],
+      "latex": "\\boxed{ \\bm{\\tau} =2\\mu\\mathbf{D} +\\lambda(\\nabla\\cdot\\bm{u})\\mathbf{I} }."
+    },
+    {
+      "id": "ffns_p39e30",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 39,
+      "bbox": [
+        147.01,
+        85.62,
+        309.91,
+        100.53
+      ],
+      "latex": "\\boxed{\\bm{\\tau}=2\\mu\\mathbf{D}}, \\boxed{\\bm{\\sigma}=-p\\mathbf{I}+2\\mu\\mathbf{D}}."
+    },
+    {
+      "id": "ffns_p39e31",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 39,
+      "bbox": [
+        150.31,
+        109.33,
+        303.22,
+        148.1
+      ],
+      "latex": "\\sigma_{ij} =-p\\delta_{ij} +\\mu\\left( \\frac{\\partial u_i}{\\partial x_j} +\\frac{\\partial u_j}{\\partial x_i} \\right)."
+    },
+    {
+      "id": "ffns_p40e32",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 40,
+      "bbox": [
+        147.58,
+        62.7,
+        305.96,
+        78.92
+      ],
+      "latex": "\\nabla\\cdot(2\\mu\\mathbf{D}) =\\mu\\nabla^2\\bm{u} +\\mu\\nabla(\\nabla\\cdot\\bm{u})."
+    },
+    {
+      "id": "ffns_p41e33",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 41,
+      "bbox": [
+        128.64,
+        75.15,
+        324.89,
+        112.86
+      ],
+      "latex": "\\boxed{ \\rho\\left[ \\frac{\\partial\\bm{u}}{\\partial t} +(\\bm{u}\\cdot\\nabla)\\bm{u} \\right] =-\\nabla p+\\mu\\nabla^2\\bm{u}+\\rho\\bm{b} }"
+    },
+    {
+      "id": "ffns_p41e34",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 41,
+      "bbox": [
+        136.86,
+        170.52,
+        317.87,
+        199.07
+      ],
+      "latex": "\\frac{\\partial\\bm{u}}{\\partial t} +(\\bm{u}\\cdot\\nabla)\\bm{u} =-\\frac{1}{\\rho}\\nabla p +\\nu\\nabla^2\\bm{u}+\\bm{b}."
+    },
+    {
+      "id": "ffns_p44e35",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 44,
+      "bbox": [
+        82.91,
+        74.5,
+        374.01,
+        113.28
+      ],
+      "latex": "\\boxed{ \\rho\\left( \\frac{\\partial u_i}{\\partial t} +u_j\\frac{\\partial u_i}{\\partial x_j} \\right) =-\\frac{\\partial p}{\\partial x_i} +\\mu\\frac{\\partial^2u_i}{\\partial x_j\\partial x_j} +\\rho b_i }, i=1,2,3,"
+    },
+    {
+      "id": "ffns_p44e36",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 44,
+      "bbox": [
+        205.24,
+        136.75,
+        252.87,
+        166.37
+      ],
+      "latex": "\\boxed{\\frac{\\partial u_i}{\\partial x_i}=0}."
+    },
+    {
+      "id": "ffns_p45e37",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 45,
+      "bbox": [
+        109.87,
+        94.3,
+        347.06,
+        110.51
+      ],
+      "latex": "\\boxed{ \\rho(\\bm{u}\\cdot\\nabla)\\bm{u} =-\\nabla p+\\mu\\nabla^2\\bm{u}+\\rho\\bm{b}}, \\boxed{\\nabla\\cdot\\bm{u}=0}."
+    },
+    {
+      "id": "ffns_p46e38",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 46,
+      "bbox": [
+        137.67,
+        64.94,
+        315.86,
+        93.49
+      ],
+      "latex": "\\bm{u}=(u(y,t),0,0), \\frac{\\partial u}{\\partial x} =\\frac{\\partial u}{\\partial z}=0."
+    },
+    {
+      "id": "ffns_p46e39",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 46,
+      "bbox": [
+        159.6,
+        124.61,
+        297.33,
+        155.08
+      ],
+      "latex": "\\boxed{ \\rho\\frac{\\partial u}{\\partial t} =-\\frac{\\partial p}{\\partial x} +\\mu\\frac{\\partial^2u}{\\partial y^2} +\\rho b_x }."
+    },
+    {
+      "id": "ffns_p47e40",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 47,
+      "bbox": [
+        112.44,
+        84.4,
+        341.1,
+        100.31
+      ],
+      "latex": "\\rho(u_t+u u_x+v u_y) =-p_x+\\mu(u_{xx}+u_{yy})+\\rho b_x,"
+    },
+    {
+      "id": "ffns_p47e41",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 47,
+      "bbox": [
+        115.13,
+        108.91,
+        338.41,
+        124.82
+      ],
+      "latex": "\\rho(v_t+u v_x+v v_y) =-p_y+\\mu(v_{xx}+v_{yy})+\\rho b_y,"
+    },
+    {
+      "id": "ffns_p47e42",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 47,
+      "bbox": [
+        195.71,
+        143.64,
+        261.22,
+        158.39
+      ],
+      "latex": "\\boxed{u_x+v_y=0}."
+    },
+    {
+      "id": "ffns_p49e43",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 49,
+      "bbox": [
+        147.68,
+        64.74,
+        305.85,
+        80.65
+      ],
+      "latex": "\\bm{u}(\\bm{x},0)=\\bm{u}_0(\\bm{x}), \\nabla\\cdot\\bm{u}_0=0,"
+    },
+    {
+      "id": "ffns_p49e44",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 49,
+      "bbox": [
+        145.54,
+        152.75,
+        307.99,
+        167.78
+      ],
+      "latex": "\\bm{u}=\\overline{\\bm{u}} \\ \\text{on }\\Gamma_D, \\bm{\\sigma}\\bm{n}=\\overline{\\bm{t}} \\ \\text{on }\\Gamma_N."
+    },
+    {
+      "id": "ffns_p50e45",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 50,
+      "bbox": [
+        67.77,
+        149.3,
+        164.66,
+        165.35
+      ],
+      "latex": "(\\bm{u}-\\mathbf{U}_{\\mathrm{wall}})\\cdot\\bm{n}=0."
+    },
+    {
+      "id": "ffns_p51e46",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 51,
+      "bbox": [
+        202.17,
+        140.81,
+        273.18,
+        156.72
+      ],
+      "latex": "\\bm{\\sigma}\\bm{n}=-p_{\\mathrm{ext}}\\bm{n};"
+    },
+    {
+      "id": "ffns_p52e47",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 52,
+      "bbox": [
+        157.0,
+        86.87,
+        296.54,
+        132.54
+      ],
+      "latex": "(\\bm{\\sigma}\\bm{n})_{\\parallel} +\\frac{\\mu}{\\ell_s} (\\bm{u}-\\mathbf U_{\\mathrm{wall}})_{\\parallel}=0."
+    },
+    {
+      "id": "ffns_p53e48",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 53,
+      "bbox": [
+        72.02,
+        68.35,
+        168.92,
+        84.41
+      ],
+      "latex": "(\\bm{u}-\\mathbf{U}_{\\mathrm{wall}})\\cdot\\bm{n}=0,"
+    },
+    {
+      "id": "ffns_p56e49",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 56,
+      "bbox": [
+        144.96,
+        80.98,
+        311.96,
+        97.19
+      ],
+      "latex": "\\boxed{ \\nabla^2p =-\\rho\\,\\nabla\\cdot\\left[(\\bm{u}\\cdot\\nabla)\\bm{u}\\right] +\\rho\\,\\nabla\\cdot\\bm{b} }."
+    },
+    {
+      "id": "ffns_p63e50",
+      "pdf": "eval/pdfs/deriving-navier-stokes.pdf",
+      "page": 63,
+      "bbox": [
+        147.58,
+        131.65,
+        305.96,
+        147.86
+      ],
+      "latex": "\\nabla\\cdot(2\\mu\\mathbf{D}) =\\mu\\nabla^2\\bm{u} +\\mu\\nabla(\\nabla\\cdot\\bm{u})."
+    }
+  ]
+}

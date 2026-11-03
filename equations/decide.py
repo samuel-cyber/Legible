@@ -1,0 +1,236 @@
+"""Fail-closed decision rule over the three evidence channels.
+
+The rule depends on whether the glyph layer (B) is available:
+
+  B available (born-digital page)
+      A matching B exactly => verified. Channel C still runs, but only as an
+      ADVISORY: its findings are recorded in the attempt and shown in the report
+      ("the visual check flagged X; the glyph layer confirmed the reading"), yet
+      they never withhold the reading. When A and B disagree, repair once, exactly
+      as before; if they still disagree, the equation is withheld and C is
+      irrelevant.
+
+  B unavailable (scanned page / image equation)
+      Channel C is the gate. C clean => verified; C flags a difference => repair
+      once then withhold if it still disagrees; C errors or returns unparseable
+      output => withheld (fail-closed).
+
+Why: measured against real runs, C is a much weaker signal than the exact,
+deterministic glyph layer. When B is present, letting an over-eager C (or a C
+that cannot run) withhold a reading that provably matches the PDF text layer
+would only cause false rejects. When B is absent there is nothing to fall back
+on, so C is used as a gate and fails closed.
+
+A model error in C must never cause verification on its own; a model error in A
+means withheld.
+
+Channels are passed in as functions so the rule can be tested without a
+model and so the evaluation can switch channels off (ablation).
+"""
+from __future__ import annotations
+
+import os
+from dataclasses import dataclass, field
+from typing import Callable, Optional
+
+from equations.glyphs import GlyphLayerUnavailable, glyph_text, glyph_tokens
+from equations.tokens import LatexParseError, Token, diff, latex_to_tokens, spoken, to_text
+
+VERIFIED, REPAIRED, WITHHELD = "verified", "repaired", "withheld"
+
+
+@dataclass
+class Attempt:
+    latex: str
+    glyph_diffs: list[str]          # Channel B disagreements (plain English)
+    visual_diffs: list[str]         # Channel C findings
+    parse_error: Optional[str] = None
+    advisory: bool = False          # True -> visual_diffs did not withhold
+
+    @property
+    def passed(self) -> bool:
+        """True when nothing here withholds the attempt (advisory C does not)."""
+        if self.parse_error or self.glyph_diffs:
+            return False
+        if self.advisory:
+            return True
+        return not self.visual_diffs
+
+    @property
+    def visual_clean(self) -> bool:
+        """True when the visual check ran and found nothing."""
+        return not self.visual_diffs
+
+
+@dataclass
+class EquationResult:
+    id: str
+    bbox: tuple
+    status: str
+    latex: Optional[str]            # the published LaTeX (None when withheld)
+    raw_text: str                   # glyph-layer text, the fallback for withheld items
+    glyph_layer: bool               # was Channel B available?
+    channels: list[str]             # which channels actually ran
+    attempts: list[Attempt] = field(default_factory=list)
+    glyph_form: str = ""            # Channel B structure, for the report
+    crop_png: Optional[str] = None
+
+    @property
+    def explanation(self) -> str:
+        last = self.attempts[-1] if self.attempts else None
+        if self.status == VERIFIED:
+            if self.glyph_layer:
+                base = "The reading matched the PDF text layer (Channel B)."
+                if "C" in self.channels and last and last.visual_diffs:
+                    base += (" The visual check flagged " + "; ".join(last.visual_diffs)
+                             + "; the glyph layer confirmed the reading, so the "
+                               "visual finding is advisory only.")
+                elif "C" in self.channels:
+                    base += " The visual check found no differences."
+                return base
+            return "The reading passed the visual check; no glyph layer was available."
+        if self.status == REPAIRED:
+            first = self.attempts[0]
+            issue = (first.glyph_diffs + first.visual_diffs + [first.parse_error or ""])[0]
+            return f"First reading was corrected after a check found: {issue}"
+        reasons = (last.glyph_diffs + last.visual_diffs + ([last.parse_error] if last and last.parse_error else [])) if last else []
+        return "Could not be verified: " + (reasons[0] if reasons else "no reading available")
+
+
+def _visual(crop_png: Optional[str], latex: str, compare: Callable, render: Callable,
+            workdir: str, tag: str) -> list[str]:
+    """Run Channel C and return its findings; record an error as a finding."""
+    try:
+        rendered = render(latex, os.path.join(workdir, f"{tag}_render.png"), crop_png)
+        return compare(crop_png, rendered)
+    except Exception as e:  # model error, unparseable output, render failure, ...
+        return [f"the visual check could not run ({type(e).__name__})"]
+
+
+def _check_gate(latex: str, crop_png: Optional[str], compare: Optional[Callable],
+                render: Optional[Callable], workdir: str, tag: str) -> Attempt:
+    """C as a gate: any finding (including an error) will withhold the reading."""
+    visual_diffs = _visual(crop_png, latex, compare, render, workdir, tag)
+    return Attempt(latex, [], visual_diffs, parse_error=None, advisory=False)
+
+
+def _check_with_b(latex: str, b_tokens: list[Token], crop_png: Optional[str],
+                  compare: Optional[Callable], render: Optional[Callable],
+                  workdir: str, tag: str) -> Attempt:
+    """B decides; C runs only as advice."""
+    try:
+        a_tokens = latex_to_tokens(latex)
+    except LatexParseError as e:
+        return Attempt(latex, [], [], parse_error=f"the reading is not valid LaTeX ({e})")
+    glyph_diffs = [d.explain() for d in diff(b_tokens, a_tokens)]
+
+    visual_diffs: list[str] = []
+    if compare and render and crop_png and not glyph_diffs:
+        # Run C only once the cheap, exact check has already passed.
+        visual_diffs = _visual(crop_png, latex, compare, render, workdir, tag)
+    return Attempt(latex, glyph_diffs, visual_diffs, parse_error=None, advisory=True)
+
+
+def verify_equation(
+    eq_id: str,
+    page,
+    bbox,
+    crop_png: Optional[str],
+    transcribe: Callable[[str], str],
+    repair: Optional[Callable[[str, str, list[str]], str]] = None,
+    compare: Optional[Callable[[str, str], list[str]]] = None,
+    render: Optional[Callable[[str, str], str]] = None,
+    use_glyphs: bool = True,
+    workdir: str = ".",
+) -> EquationResult:
+    channels = ["A"]
+    b_tokens = None
+    if use_glyphs:
+        try:
+            b_tokens = glyph_tokens(page, bbox)
+            channels.append("B")
+        except GlyphLayerUnavailable:
+            b_tokens = None
+    if compare and render:
+        channels.append("C")
+
+    if b_tokens:
+        raw = spoken(b_tokens)
+    else:
+        raw = glyph_text(page, bbox) if page is not None else ""
+    result = EquationResult(eq_id, tuple(bbox), WITHHELD, None, raw, b_tokens is not None, channels,
+                            glyph_form=to_text(b_tokens) if b_tokens else "", crop_png=crop_png)
+
+    # Without the glyph layer AND without the visual check there is no
+    # independent evidence at all, so nothing can be verified.
+    if b_tokens is None and "C" not in channels:
+        try:
+            latex = transcribe(crop_png)
+            result.attempts.append(Attempt(latex, [], [], parse_error=None))
+            result.attempts[-1].visual_diffs = ["no independent evidence available"]
+        except Exception:
+            pass
+        return result
+
+    try:
+        latex = transcribe(crop_png)
+    except Exception:
+        # A model error in Channel A means withheld: it can never verify.
+        result.attempts.append(Attempt(
+            "", [], [],
+            parse_error="the reading call failed (Channel A did not return a reading)"))
+        return result
+
+    try:
+        if b_tokens is not None:
+            return _decide_with_b(result, eq_id, b_tokens, crop_png, latex, repair,
+                                  compare, render, workdir)
+        return _decide_with_c(result, eq_id, crop_png, latex, repair, compare, render, workdir)
+    except Exception:
+        # A model error while re-reading (Channel A) must fail closed, never verify.
+        result.status, result.latex = WITHHELD, None
+        return result
+
+
+def _decide_with_b(result, eq_id, b_tokens, crop_png, latex, repair, compare, render, workdir) -> EquationResult:
+    """Channel B is available: it is the gate, Channel C is advisory."""
+    first = _check_with_b(latex, b_tokens, crop_png, compare, render, workdir, f"{eq_id}_a1")
+    result.attempts.append(first)
+    if first.passed:
+        result.status, result.latex = VERIFIED, latex
+        return result
+
+    # A and B disagree (or the reading was not valid LaTeX): repair once.
+    if repair:
+        problems = first.glyph_diffs + first.visual_diffs + ([first.parse_error] if first.parse_error else [])
+        latex2 = repair(crop_png, latex, problems)
+        second = _check_with_b(latex2, b_tokens, crop_png, compare, render, workdir, f"{eq_id}_a2")
+        result.attempts.append(second)
+        if second.passed:
+            result.status, result.latex = REPAIRED, latex2
+            return result
+
+    # Still disagreeing after one repair: withheld regardless of C.
+    result.status, result.latex = WITHHELD, None
+    return result
+
+
+def _decide_with_c(result, eq_id, crop_png, latex, repair, compare, render, workdir) -> EquationResult:
+    """No glyph layer: Channel C is the gate, and it fails closed."""
+    first = _check_gate(latex, crop_png, compare, render, workdir, f"{eq_id}_a1")
+    result.attempts.append(first)
+    if first.passed:
+        result.status, result.latex = VERIFIED, latex
+        return result
+
+    if repair:
+        problems = list(first.visual_diffs)
+        latex2 = repair(crop_png, latex, problems)
+        second = _check_gate(latex2, crop_png, compare, render, workdir, f"{eq_id}_a2")
+        result.attempts.append(second)
+        if second.passed:
+            result.status, result.latex = REPAIRED, latex2
+            return result
+
+    result.status, result.latex = WITHHELD, None
+    return result

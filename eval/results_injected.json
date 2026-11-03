@@ -1,0 +1,66 @@
+{
+  "mode": "injected",
+  "repair_model": "oracle (gold) — injected mode",
+  "n_gold": 152,
+  "n_corruptions": 303,
+  "corruption_kinds": {
+    "exponent": 51,
+    "dropped term": 33,
+    "greek swap": 27,
+    "inverted fraction": 21,
+    "digit": 54,
+    "swapped subscript": 50,
+    "sign flip": 66,
+    "dropped accent": 1
+  },
+  "rows": [
+    {
+      "config": "A only (single pass)",
+      "false_accept_rate": 1.0,
+      "false_reject_rate": 0.0,
+      "repair_success_rate": null,
+      "review_share": 0.0,
+      "seconds_per_equation": 0.0,
+      "counts": {
+        "corrupted": 303,
+        "false_accept": 303,
+        "caught": 0,
+        "repaired_to_gold": 0,
+        "gold": 152,
+        "gold_rejected": 0
+      }
+    },
+    {
+      "config": "A + B (glyph layer)",
+      "false_accept_rate": 0.0,
+      "false_reject_rate": 0.237,
+      "repair_success_rate": 0.0,
+      "review_share": 0.745,
+      "seconds_per_equation": 0.001,
+      "counts": {
+        "corrupted": 303,
+        "false_accept": 0,
+        "caught": 303,
+        "repaired_to_gold": 0,
+        "gold": 152,
+        "gold_rejected": 36
+      }
+    },
+    {
+      "config": "A + B + repair (full, offline)",
+      "false_accept_rate": 0.0,
+      "false_reject_rate": 0.237,
+      "repair_success_rate": 0.683,
+      "review_share": 0.745,
+      "seconds_per_equation": 0.001,
+      "counts": {
+        "corrupted": 303,
+        "false_accept": 0,
+        "caught": 96,
+        "repaired_to_gold": 207,
+        "gold": 152,
+        "gold_rejected": 36
+      }
+    }
+  ]
+}

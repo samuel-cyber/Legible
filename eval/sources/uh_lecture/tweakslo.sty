@@ -1,0 +1,75 @@
+% Use links with nice colors
+\usepackage[colorlinks=true, citecolor=blue, linkcolor=blue, urlcolor=blue]{hyperref}
+% Ensure that reference numbers are upright
+\usepackage{upref}
+% Extra symbols e.g. \lesssim
+\usepackage{amssymb}
+% Tune amsmath
+\usepackage{mathtools}
+
+% Show useful metadata when not final
+% Use good geometry for metadata
+\usepackage[a4paper,
+    left=80pt,
+    right=120pt,
+    marginparsep=5pt,
+    footskip=25pt]{geometry}
+\usepackage{ifdraft}
+\ifoptionfinal{
+\usepackage[disable]{todonotes}
+}{
+\usepackage[norefs, nocites]{refcheck}
+\usepackage{seqsplit}
+\usepackage{accsupp}
+\providecommand*\showkeyslabelformat[1]{% 
+\parbox{75pt}{\parbox{72pt}{\raggedleft\normalfont\tiny\ttfamily\color{gray}\seqsplit{#1}}%
+\BeginAccSupp{method=escape,ActualText={#1}}\,\small\color{gray}$\triangleright$\EndAccSupp{}}%
+}
+\usepackage[notref, notcite]{showkeys}
+\usepackage[bordercolor=white, color=green!10, textwidth=115pt]{todonotes}
+}
+%HACK from Sec. 1.6.4 of the manual of todonotes package
+\makeatletter\providecommand\@dotsep{5}\def\listtodoname{List of Todos}\def\listoftodos{\hypersetup{linkcolor=black}\@starttoc{tdo}\listtodoname\hypersetup{linkcolor=blue}}\makeatother
+
+\usepackage{thmtools}
+\declaretheoremstyle[bodyfont=\normalfont]{upstyle}
+\declaretheoremstyle[bodyfont=\normalfont, headfont=\normalfont\itshape]{uplightstyle}
+\declaretheorem[shaded={bgcolor=black!4}, style=upstyle]{theorem}
+\declaretheorem[shaded={bgcolor=black!4}, style=upstyle]{definition}
+\declaretheorem[shaded={bgcolor=black!4}, style=upstyle]{lemma}
+\declaretheorem[shaded={bgcolor=black!4}, style=upstyle]{proposition}
+\declaretheorem[shaded={bgcolor=black!4}, style=upstyle]{corollary}
+\declaretheorem[shaded={bgcolor=black!4}, style=uplightstyle]{remark}
+\declaretheorem[shaded={bgcolor=black!4}, style=uplightstyle]{example}
+
+
+%% Tricks to eliminate compiler warnings
+
+%\raggedbottom
+%% May help with "Underfull \vbox"
+%\hyphenation{Min-kowski}
+%% May help with "Overfull \hbox"
+%\usepackage[shortcuts]{extdash}
+%% May help when hyphenating expressions containing -
+
+%% Examples
+
+%\def\id{\mathrm{id}}
+
+%\def\i{\imath}
+%\def\g{\mathfrak g}
+%\def\U{\mathbf U}
+%\def\F{\mathcal F}
+%\DeclareMathOperator{\GL}{\mathsf{GL}}
+
+%\usepackage{mathrsfs}
+%\def\I{\mathscr I}
+
+%\usepackage{bm}
+%\bmdefine\bbeta{\beta}
+
+%\usepackage{stmaryrd}
+%\DeclarePairedDelimiter\jump{\llbracket}{\rrbracket}
+
+%\let\div\relax
+%\DeclareMathOperator{\div}{div}

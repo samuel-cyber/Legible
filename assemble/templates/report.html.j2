@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verification report · {{ title }}</title>
+<style>
+  :root { --bg:#fbfaf7; --ink:#1d1d1b; --muted:#5d5b55; --rule:#e2dfd7; --ok:#1f6b45; --fix:#7a4b00; --stop:#9b2226; --panel:#fff; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#151514; --ink:#ecebe6; --muted:#a8a59c; --rule:#34332f; --ok:#6fcf97; --fix:#f2b54b; --stop:#ff8a80; --panel:#1f1e1c; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font: 15px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 64rem; margin: 0 auto; padding: 40px 20px 80px; }
+  h1 { font-size: 1.7rem; margin: 0 0 4px; } .sub { color: var(--muted); margin: 0 0 28px; }
+  .tally { display:flex; gap: 12px; flex-wrap: wrap; margin-bottom: 28px; }
+  .tally div { background: var(--panel); border:1px solid var(--rule); border-radius: 10px; padding: 12px 16px; min-width: 120px; }
+  .tally b { display:block; font-size: 1.6rem; } .tally span { color: var(--muted); font-size: 13px; }
+  article { background: var(--panel); border:1px solid var(--rule); border-radius: 12px; padding: 18px; margin-bottom: 16px; }
+  .row { display:grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 18px; }
+  @media (max-width: 720px) { .row { grid-template-columns: 1fr; } }
+  .crop img { max-width: 100%; background: #fff; border-radius: 6px; border:1px solid var(--rule); }
+  .label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 0 0 6px; }
+  .badge { display:inline-block; font-weight: 700; font-size: 12px; padding: 3px 9px; border-radius: 999px; border: 1.5px solid currentColor; }
+  .verified { color: var(--ok); } .repaired { color: var(--fix); } .withheld { color: var(--stop); }
+  code { font-family: ui-monospace, monospace; font-size: 13px; word-break: break-word; }
+  ol.attempts { margin: 10px 0 0; padding-left: 20px; } ol.attempts li { margin-bottom: 8px; }
+  .diff { color: var(--stop); } .muted { color: var(--muted); }
+  .advisory { color: var(--fix); }
+  .tag { display:inline-block; font-weight:700; font-size:11px; padding:1px 7px; border-radius:999px;
+         border:1.5px solid currentColor; text-transform:uppercase; letter-spacing:.04em; margin-right:6px; }
+  math { font-size: 1.15em; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Verification report</h1>
+  <p class="sub">{{ title }} · channels: A = Muse Spark reading, B = PDF glyph layer, C = render-back visual check</p>
+  <div class="tally">
+    <div><b>{{ summary.total }}</b><span>equations</span></div>
+    <div><b class="verified">{{ summary.verified }}</b><span>verified</span></div>
+    <div><b class="repaired">{{ summary.repaired }}</b><span>repaired</span></div>
+    <div><b class="withheld">{{ summary.withheld }}</b><span>withheld</span></div>
+  </div>
+  {% for r in results %}
+  <article aria-labelledby="h-{{ r.id }}">
+    <h2 id="h-{{ r.id }}" style="font-size:1.05rem;margin:0 0 12px">Equation {{ loop.index }} <span class="badge {{ r.status }}">{{ r.status }}</span></h2>
+    <div class="row">
+      <div class="crop">
+        <p class="label">Original</p>
+        {% if crops[r.id] %}<img src="{{ crops[r.id] }}" alt="Original equation image from the PDF">{% endif %}
+        <p class="label" style="margin-top:12px">Glyph layer (B)</p>
+        <code>{{ r.glyph_form or "unavailable" }}</code>
+      </div>
+      <div>
+        <p class="label">Published</p>
+        {% if mathml[r.id] %}{{ mathml[r.id] | safe }}<br><code>{{ r.latex }}</code>{% else %}<span class="muted">Not published as math.</span>{% endif %}
+        <p class="label" style="margin-top:12px">Why</p>
+        <p style="margin:0">{{ r.explanation }}</p>
+        <p class="label" style="margin-top:12px">Channels run: {{ r.channels | join(", ") }}</p>
+      </div>
+    </div>
+    <ol class="attempts">
+      {% for a in r.attempts %}
+      <li><span class="muted">{{ "Reading" if loop.first else "Repair" }}:</span> <code>{{ a.latex }}</code>
+        {% for d in a.glyph_diffs %}<div class="diff">B: {{ d }}</div>{% endfor %}
+        {% if a.advisory %}
+          {% for d in a.visual_diffs %}<div class="advisory"><span class="tag">advisory</span>C flagged: {{ d }}. The glyph layer (B) confirmed the reading, so this did not withhold the equation.</div>{% endfor %}
+          {% if a.visual_clean and not a.glyph_diffs and not a.parse_error %}<div class="advisory"><span class="tag">advisory</span>C found no differences; the glyph layer (B) confirmed the reading.</div>{% endif %}
+        {% else %}
+          {% for d in a.visual_diffs %}<div class="diff">C (gate): {{ d }}</div>{% endfor %}
+        {% endif %}
+        {% if a.parse_error %}<div class="diff">{{ a.parse_error }}</div>{% endif %}
+        {% if a.passed %}<div class="verified">All checks passed.</div>{% endif %}
+      </li>
+      {% endfor %}
+    </ol>
+  </article>
+  {% endfor %}
+</main>
+</body>
+</html>

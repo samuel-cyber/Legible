@@ -1,0 +1,81 @@
+# Region finder comparison
+
+| PDF | Pages | Heuristic | Model | Matched | Model extra | Heuristic missed |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `lec_notes.pdf` | 22 | 192 | 117 | 33 | 84 | 159 |
+| `deriving-navier-stokes.pdf` | 66 | 122 | 99 | 45 | 54 | 66 |
+| **total** | 88 | 314 | 216 | 78 | 138 | 225 |
+
+Per page:
+
+| PDF | Page | Heuristic | Model | Matched | Model extra | Heuristic missed |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `lec_notes.pdf` | 2 | 6 | 3 | 1 | 2 | 5 |
+| `lec_notes.pdf` | 3 | 9 | 7 | 3 | 4 | 6 |
+| `lec_notes.pdf` | 4 | 10 | 5 | 1 | 4 | 9 |
+| `lec_notes.pdf` | 5 | 8 | 6 | 1 | 5 | 7 |
+| `lec_notes.pdf` | 6 | 8 | 7 | 0 | 7 | 8 |
+| `lec_notes.pdf` | 7 | 9 | 7 | 3 | 4 | 6 |
+| `lec_notes.pdf` | 8 | 4 | 3 | 2 | 1 | 2 |
+| `lec_notes.pdf` | 9 | 7 | 6 | 1 | 5 | 6 |
+| `lec_notes.pdf` | 10 | 14 | 6 | 2 | 4 | 12 |
+| `lec_notes.pdf` | 11 | 12 | 6 | 0 | 6 | 12 |
+| `lec_notes.pdf` | 12 | 9 | 6 | 0 | 6 | 9 |
+| `lec_notes.pdf` | 13 | 12 | 8 | 6 | 2 | 6 |
+| `lec_notes.pdf` | 14 | 11 | 4 | 2 | 2 | 9 |
+| `lec_notes.pdf` | 15 | 9 | 7 | 2 | 5 | 7 |
+| `lec_notes.pdf` | 16 | 9 | 6 | 1 | 5 | 8 |
+| `lec_notes.pdf` | 17 | 12 | 4 | 2 | 2 | 10 |
+| `lec_notes.pdf` | 18 | 12 | 6 | 2 | 4 | 10 |
+| `lec_notes.pdf` | 19 | 12 | 6 | 3 | 3 | 9 |
+| `lec_notes.pdf` | 20 | 9 | 8 | 1 | 7 | 8 |
+| `lec_notes.pdf` | 21 | 10 | 6 | 0 | 6 | 10 |
+| `deriving-navier-stokes.pdf` | 1 | 2 | 2 | 2 | 0 | 0 |
+| `deriving-navier-stokes.pdf` | 8 | 2 | 3 | 0 | 3 | 2 |
+| `deriving-navier-stokes.pdf` | 10 | 3 | 1 | 1 | 0 | 2 |
+| `deriving-navier-stokes.pdf` | 11 | 2 | 2 | 1 | 1 | 1 |
+| `deriving-navier-stokes.pdf` | 12 | 2 | 2 | 1 | 1 | 1 |
+| `deriving-navier-stokes.pdf` | 13 | 2 | 2 | 1 | 1 | 1 |
+| `deriving-navier-stokes.pdf` | 14 | 3 | 3 | 1 | 2 | 2 |
+| `deriving-navier-stokes.pdf` | 15 | 1 | 1 | 1 | 0 | 0 |
+| `deriving-navier-stokes.pdf` | 16 | 1 | 1 | 0 | 1 | 1 |
+| `deriving-navier-stokes.pdf` | 17 | 3 | 2 | 2 | 0 | 1 |
+| `deriving-navier-stokes.pdf` | 18 | 4 | 3 | 1 | 2 | 3 |
+| `deriving-navier-stokes.pdf` | 19 | 3 | 3 | 1 | 2 | 2 |
+| `deriving-navier-stokes.pdf` | 20 | 1 | 1 | 0 | 1 | 1 |
+| `deriving-navier-stokes.pdf` | 21 | 1 | 1 | 0 | 1 | 1 |
+| `deriving-navier-stokes.pdf` | 22 | 3 | 3 | 2 | 1 | 1 |
+| `deriving-navier-stokes.pdf` | 23 | 2 | 2 | 0 | 2 | 2 |
+| `deriving-navier-stokes.pdf` | 24 | 1 | 1 | 0 | 1 | 1 |
+| `deriving-navier-stokes.pdf` | 25 | 3 | 2 | 1 | 1 | 2 |
+| `deriving-navier-stokes.pdf` | 26 | 2 | 2 | 1 | 1 | 1 |
+| `deriving-navier-stokes.pdf` | 27 | 2 | 2 | 1 | 1 | 1 |
+| `deriving-navier-stokes.pdf` | 28 | 4 | 3 | 3 | 0 | 1 |
+| `deriving-navier-stokes.pdf` | 29 | 1 | 1 | 1 | 0 | 0 |
+| `deriving-navier-stokes.pdf` | 30 | 1 | 1 | 0 | 1 | 1 |
+| `deriving-navier-stokes.pdf` | 31 | 2 | 2 | 0 | 2 | 2 |
+| `deriving-navier-stokes.pdf` | 32 | 3 | 4 | 2 | 2 | 1 |
+| `deriving-navier-stokes.pdf` | 33 | 2 | 2 | 1 | 1 | 1 |
+| `deriving-navier-stokes.pdf` | 34 | 2 | 2 | 0 | 2 | 2 |
+| `deriving-navier-stokes.pdf` | 35 | 3 | 2 | 2 | 0 | 1 |
+| `deriving-navier-stokes.pdf` | 36 | 2 | 2 | 0 | 2 | 2 |
+| `deriving-navier-stokes.pdf` | 37 | 1 | 1 | 0 | 1 | 1 |
+| `deriving-navier-stokes.pdf` | 39 | 3 | 1 | 0 | 1 | 3 |
+| `deriving-navier-stokes.pdf` | 40 | 2 | 2 | 0 | 2 | 2 |
+| `deriving-navier-stokes.pdf` | 41 | 2 | 2 | 1 | 1 | 1 |
+| `deriving-navier-stokes.pdf` | 42 | 3 | 2 | 0 | 2 | 3 |
+| `deriving-navier-stokes.pdf` | 43 | 4 | 3 | 2 | 1 | 2 |
+| `deriving-navier-stokes.pdf` | 44 | 5 | 4 | 4 | 0 | 1 |
+| `deriving-navier-stokes.pdf` | 45 | 2 | 2 | 0 | 2 | 2 |
+| `deriving-navier-stokes.pdf` | 46 | 1 | 2 | 1 | 1 | 0 |
+| `deriving-navier-stokes.pdf` | 47 | 3 | 2 | 2 | 0 | 1 |
+| `deriving-navier-stokes.pdf` | 48 | 3 | 2 | 1 | 1 | 2 |
+| `deriving-navier-stokes.pdf` | 50 | 4 | 3 | 1 | 2 | 3 |
+| `deriving-navier-stokes.pdf` | 51 | 2 | 2 | 0 | 2 | 2 |
+| `deriving-navier-stokes.pdf` | 52 | 2 | 2 | 0 | 2 | 2 |
+| `deriving-navier-stokes.pdf` | 53 | 1 | 2 | 1 | 1 | 0 |
+| `deriving-navier-stokes.pdf` | 54 | 2 | 2 | 2 | 0 | 0 |
+| `deriving-navier-stokes.pdf` | 56 | 1 | 1 | 0 | 1 | 1 |
+| `deriving-navier-stokes.pdf` | 57 | 2 | 2 | 1 | 1 | 1 |
+| `deriving-navier-stokes.pdf` | 63 | 2 | 3 | 2 | 1 | 0 |
+| `deriving-navier-stokes.pdf` | 64 | 3 | 1 | 1 | 0 | 2 |
