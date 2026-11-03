@@ -52,6 +52,16 @@ python pipeline.py demo/pages/fluids.pdf out/fluids --replay demo/replay_fluids.
 
 Outputs `out/fluids/index.html` (the accessible page) and `out/fluids/report.html` (the verification report).
 
+### Web app
+
+```bash
+uvicorn app.main:app --reload
+```
+
+Opens an upload UI at `http://127.0.0.1:8000`: pick a PDF, watch per-equation
+progress stream in, then open the accessible page or the verification
+report. See `DEPLOY.md` for deploying this to Render or Hugging Face Spaces.
+
 ## Harder page
 
 `demo/hard/` is a second page with constructs the first one does not have:
@@ -82,6 +92,75 @@ clients/     Meta Model API client (OpenAI-compatible)
 eval/        error injection and ablation
 ```
 
+## Results
+
+Measured against a 152-equation gold set: the 6-equation demo page plus 146
+equations drawn from two CC-BY lecture-note PDFs (`eval/pdfs/lec_notes.pdf`,
+finite-element methods, 96 equations; `eval/pdfs/deriving-navier-stokes.pdf`,
+fluid mechanics, 50 equations). Every number below comes from an actual run
+of the code in this repository — full methodology in `eval/EVAL_REPORT.md`.
+
+| | False accept | False reject |
+| --- | --- | --- |
+| No verification (raw reading published as-is) | 100% (303/303 injected errors published) | 0% |
+| With verification (glyph-layer gate) | **0%** (0/303 injected errors published) | 23.7% (36/152 correct equations withheld) |
+
+- **Zero false accepts**, with or without a repair pass. All 303 injected
+  corruptions (sign flips, wrong exponents, swapped subscripts, dropped
+  terms, Greek-letter swaps, inverted fractions, …) across all 152 gold
+  equations were caught.
+- **False-reject rate: 23.7%** (36/152) — the *same* 36 equations whether
+  Channel A's reading is a stored string or a live Muse Spark call. Every one
+  is the glyph layer hitting a genuine geometric limit (see Scope below), not
+  a mistaken rejection of an ordinary equation.
+- **Real Muse Spark errors, caught:** running the live model over all 152
+  real crops (Channel C off, no repair) found 114 agreements and 4
+  disagreements. Three are genuine reading mistakes — in each, the model
+  wrote a visually similar bar (`\|` or `||`) where the PDF's own glyph was
+  the norm symbol `∥`, a meaning-changing substitution, and the glyph-layer
+  check withheld all three rather than publish a different symbol as the
+  same one. The fourth is a region-detection artefact (a crop spanning two
+  separate equations), not a reading error.
+- **Repair:** one guided re-read, told exactly what disagreed, fixed 68.3% of
+  the equations the first pass flagged, measured offline where the target
+  reading is known exactly (an oracle repair — see `eval/EVAL_REPORT.md` for
+  why the live repair-success metric reads 0%: a token-equality bug in the
+  *metric*, not a failed repair).
+
 ## Scope
 
-Born-digital, single-column PDFs. Scanned pages have no glyph layer, so equations on them can only be verified by the visual check; multi-column layout, charts and diagrams are roadmap.
+Born-digital PDFs with a real text layer. Scanned pages have no glyph layer,
+so Channel C's visual check has to carry verification alone — a much weaker
+signal, measured at 82.2% false-reject in that configuration (vs. 23.7% with
+the glyph layer). Multi-column layout, charts and diagrams are roadmap.
+
+The glyph layer (Channel B) is pure geometry — symbol size and position, no
+model — so it cannot yet represent every construct. All 36 of the equations
+above that are withheld despite being correct come from one of these, each
+confirmed against real glyph samples (`eval/EVAL_REPORT.md` §4):
+
+- a superscript nested inside a subscript or vice versa, e.g. `L^p(I)` as a
+  subscript (17 of 36) — the dominant gap, and the one we looked hardest at
+  fixing; it needs the script-role tracker to carry a real baseline per
+  nesting level rather than compare each glyph only to its immediate
+  neighbour, which is a bigger change than we were willing to risk this late
+  without new false accepts, so it stays a documented limit
+- a subscript immediately followed by a closing delimiter, which inherits the
+  same ambiguity (6)
+- a big operator (`\sum`, `\prod`) whose limit glyphs interleave with the
+  operator symbol in raw print order (3)
+- `\overline` drawn as a rule rather than a glyph (1)
+- a Unicode integral glyph whose limit is visually absorbed into the symbol (1)
+- `\Longrightarrow`-style long arrows drawn as two component glyphs — left
+  withheld on purpose, since folding it risks silently merging an unrelated
+  `=` that happens to precede an arrow (2)
+
+That accounts for 30 of the 36. The remaining 6 are a different kind of gap —
+region detection, not the token vocabulary: the equation's bounding box
+captured a neighbouring line or two equations at once, so the glyph layer
+read the wrong span. That is `layout/regions.py`'s territory (model-proposed
+boxes unioned with the heuristic, see `eval/EVAL_REPORT.md` §8), not a
+tokenizer limit.
+
+None of these 36 produce a false accept: every one fails closed and is
+withheld rather than guessed.

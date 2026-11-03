@@ -111,7 +111,7 @@ def process(
                 compare=compare, render=renderback.render_latex if compare else None,
                 use_glyphs=use_glyphs, workdir=crops_dir,
             )
-            on_event({"type": "equation_done", "id": eq_id, "status": r.status, "why": r.explanation})
+            on_event({"type": "equation_done", "id": eq_id, "status": r.status, "why": r.plain_explanation})
             return r
 
         with ThreadPoolExecutor(max_workers=workers) as pool:

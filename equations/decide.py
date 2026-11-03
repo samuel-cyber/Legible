@@ -96,6 +96,19 @@ class EquationResult:
         reasons = (last.glyph_diffs + last.visual_diffs + ([last.parse_error] if last and last.parse_error else [])) if last else []
         return "Could not be verified: " + (reasons[0] if reasons else "no reading available")
 
+    @property
+    def plain_explanation(self) -> str:
+        """Short, jargon-free status line for students and judges.
+
+        No "Channel A/B/C", no "glyph layer" — those stay in the report's
+        expandable technical details, which read from `explanation` instead.
+        """
+        if self.status == VERIFIED:
+            return "Checked against the PDF: correct."
+        if self.status == REPAIRED:
+            return "Corrected after checking."
+        return "Couldn't be confirmed, so it isn't read as math."
+
 
 def _visual(crop_png: Optional[str], latex: str, compare: Callable, render: Callable,
             workdir: str, tag: str) -> list[str]:

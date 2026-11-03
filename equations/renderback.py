@@ -16,10 +16,10 @@ import matplotlib.pyplot as plt
 
 from clients import meta
 
-COMPARE_PROMPT = """Image 1 is an equation cropped from a lecture PDF.
-Image 2 is the same equation re-typeset from a transcription of it.
+COMPARE_PROMPT = """The first picture is an equation cropped from a lecture PDF.
+The second picture is the same equation re-typeset from a transcription of it.
 
-The two images deliberately use DIFFERENT fonts and renderers, so the glyph
+The two pictures deliberately use DIFFERENT fonts and renderers, so the glyph
 shapes, stroke weights, sizes, italics, slant, kerning, spacing and color will
 NOT match exactly. None of that is a difference.
 
@@ -32,10 +32,13 @@ example:
 - a missing or extra symbol, fraction, bracket or accent
 
 Do NOT report a difference for font choice, size, spacing, slant or italics
-alone when it is the same character. Ignore any equation number in image 1.
+alone when it is the same character. Ignore any equation number in the first
+picture.
 
 For each real difference, QUOTE the exact characters you compared, as
-"Image 1 has X but image 2 has Y".
+"the original has X but the re-typeset version has Y". Do not refer to
+"image 1" or "image 2" — describe them as the original and the re-typeset
+version.
 Return JSON: {"differences": ["...", "..."]}  (an empty list if the characters are identical)"""
 
 
