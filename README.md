@@ -1,6 +1,6 @@
 # Legible
 
-**Verified STEM accessibility.** Legible turns engineering lecture PDFs into screen-reader-accessible HTML, and refuses to publish any equation it cannot prove matches the source.
+**Verified STEM accessibility.** Legible turns engineering lecture PDFs into screen-reader-accessible HTML, and refuses to publish any equation it cannot independently verify against the source.
 
 Built for the Meta Global AI Developer Hackathon (building period Oct 27 – Nov 4, 2026). All code in this repository was written during the hackathon.
 

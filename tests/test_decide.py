@@ -206,3 +206,85 @@ def test_render_failure_does_not_verify():
                         compare=lambda crop, rendered: [], render=render,
                         use_glyphs=True)
     assert r.status == WITHHELD
+
+
+# -------------------------------------------------------------- timeline -----
+
+def test_timeline_verified_on_first_read_is_two_steps():
+    page = _page_with("x=1")
+    r = verify_equation("e1", page, BBOX, "crop.png",
+                        transcribe=lambda c: "x=1",
+                        compare=lambda crop, rendered: [], render=_render,
+                        use_glyphs=True)
+    assert r.timeline == ["Read: x=1", "Confirmed"]
+
+
+def test_timeline_advisory_c_note_on_verified_is_surfaced_not_hidden():
+    page = _page_with("x=1")
+
+    def compare(crop, rendered):
+        return ["a stray mark that looks like a comma"]
+
+    r = verify_equation("e1", page, BBOX, "crop.png",
+                        transcribe=lambda c: "x=1", compare=compare, render=_render,
+                        use_glyphs=True)
+    assert r.status == VERIFIED
+    assert len(r.timeline) == 2
+    assert r.timeline[0] == "Read: x=1"
+    assert "Confirmed" in r.timeline[1]
+    assert "a stray mark that looks like a comma" in r.timeline[1]
+    assert "advisory" in r.timeline[1].lower()
+
+
+def test_timeline_full_repair_loop_is_four_steps():
+    """The exact shape asked for: Read -> disagreement -> re-read -> outcome."""
+    page = _page_with("x=1")
+    r = verify_equation("e1", page, BBOX, "crop.png",
+                        transcribe=lambda c: "x=-1",
+                        repair=lambda c, latex, diffs: "x=1",
+                        compare=lambda crop, rendered: [], render=_render,
+                        use_glyphs=True)
+    assert r.status == REPAIRED
+    steps = r.timeline
+    assert len(steps) == 4
+    assert steps[0] == "Read: x=-1"
+    assert steps[1].startswith("Disagreement with the source: ")
+    assert steps[2] == "Re-read with that evidence: x=1"
+    assert steps[3] == "Confirmed after correction"
+
+
+def test_timeline_repair_still_disagrees_ends_withheld():
+    page = _page_with("x=1")
+    r = verify_equation("e1", page, BBOX, "crop.png",
+                        transcribe=lambda c: "x=-1",
+                        repair=lambda c, latex, diffs: "x=-1",
+                        compare=lambda crop, rendered: [], render=_render,
+                        use_glyphs=True)
+    assert r.status == WITHHELD
+    steps = r.timeline
+    assert len(steps) == 4
+    assert steps[2] == "Re-read with that evidence: x=-1"
+    assert steps[3] == "Withheld"
+
+
+def test_timeline_no_repair_available_is_three_steps():
+    """No repair function supplied: the loop stops after the disagreement."""
+    page = _page_with("x=1")
+    r = verify_equation("e1", page, BBOX, "crop.png", transcribe=lambda c: "x=-1",
+                        compare=lambda crop, rendered: [], render=_render,
+                        use_glyphs=True)
+    assert r.status == WITHHELD
+    assert len(r.timeline) == 3
+    assert r.timeline[0] == "Read: x=-1"
+    assert r.timeline[1].startswith("Disagreement with the source: ")
+    assert r.timeline[2] == "Withheld"
+
+
+def test_timeline_model_call_failure_says_could_not_be_read():
+    def boom(_crop):
+        raise RuntimeError("model down")
+    page = _page_with("x=1")
+    r = verify_equation("e1", page, BBOX, "crop.png", transcribe=boom, use_glyphs=True)
+    assert r.status == WITHHELD
+    assert r.timeline[0] == "Read: the reading call failed"
+    assert r.timeline[1].startswith("Could not be read: ")

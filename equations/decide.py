@@ -109,6 +109,53 @@ class EquationResult:
             return "Corrected after checking."
         return "Couldn't be confirmed, so it isn't read as math."
 
+    @property
+    def timeline(self) -> list[str]:
+        """Plain step-by-step account for the report: what was read, any
+        disagreement that triggered a re-read, and the final outcome.
+
+        Built only from the real attempts -- nothing here is synthesized.
+        Shape matches the simplest case exactly ("Read" -> "Confirmed") and
+        grows to the full repair loop only when a second attempt actually
+        happened: Read -> disagreement with the source -> re-read with that
+        evidence -> confirmed / withheld.
+        """
+        if not self.attempts:
+            return []
+        first = self.attempts[0]
+        read_step = f"Read: {first.latex}" if first.latex else "Read: the reading call failed"
+
+        def outcome() -> str:
+            if self.status == VERIFIED:
+                return "Confirmed"
+            if self.status == REPAIRED:
+                return "Confirmed after correction"
+            if self.status == "ai_read":  # reserved for the scans feature
+                return "Read by AI — not independently verified"
+            return "Withheld"
+
+        # advisory C notes (born-digital) and ai_read cautions (scans) never
+        # gate the result, but are worth surfacing alongside a clean pass.
+        notes = list(first.visual_diffs) + list(getattr(self, "cautions", []))
+        if first.passed and self.status in (VERIFIED, "ai_read"):
+            step = outcome()
+            if notes:
+                step += " (a check also noted: " + "; ".join(notes) + " — advisory only, did not change the result)"
+            return [read_step, step]
+
+        only_parse_error = first.parse_error and not first.glyph_diffs and not (first.visual_diffs and not first.advisory)
+        if only_parse_error:
+            disagreement = f"Could not be read: {first.parse_error}"
+        else:
+            problems = first.glyph_diffs + ([first.parse_error] if first.parse_error else []) + \
+                (first.visual_diffs if not first.advisory else [])
+            disagreement = "Disagreement with the source: " + ("; ".join(problems) if problems else "could not be checked")
+
+        if len(self.attempts) > 1:
+            second = self.attempts[1]
+            return [read_step, disagreement, f"Re-read with that evidence: {second.latex}", outcome()]
+        return [read_step, disagreement, outcome()]
+
 
 def _visual(crop_png: Optional[str], latex: str, compare: Callable, render: Callable,
             workdir: str, tag: str) -> list[str]:

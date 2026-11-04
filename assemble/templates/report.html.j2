@@ -31,6 +31,13 @@
   details { margin-top: 12px; }
   details summary { cursor: pointer; font-size: 13px; font-weight: 600; color: var(--muted); }
   details[open] summary { margin-bottom: 8px; }
+  ol.timeline { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-wrap: wrap;
+                gap: 6px; align-items: center; font-size: 13.5px; }
+  ol.timeline li { background: var(--bg); border: 1px solid var(--rule); border-radius: 7px;
+                   padding: 5px 10px; }
+  ol.timeline li:not(:last-child)::after { content: "→"; margin-left: 10px; color: var(--muted); }
+  ol.timeline li.outcome-verified, ol.timeline li.outcome-ai_read { border-color: var(--ok); color: var(--ok); }
+  ol.timeline li.outcome-withheld { border-color: var(--stop); color: var(--stop); }
 </style>
 </head>
 <body>
@@ -58,6 +65,14 @@
         <p style="margin:0">{{ r.plain_explanation }}</p>
       </div>
     </div>
+    {% if r.timeline %}
+    <p class="label" style="margin-top:14px">What happened, step by step</p>
+    <ol class="timeline">
+      {% for step in r.timeline %}
+      <li{% if loop.last %} class="outcome-{{ r.status }}"{% endif %}>{{ step }}</li>
+      {% endfor %}
+    </ol>
+    {% endif %}
     <details>
       <summary>Technical details</summary>
       <p class="label">What the PDF's own text actually contains</p>
