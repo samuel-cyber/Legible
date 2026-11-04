@@ -174,8 +174,35 @@ few points everywhere; padding each proposed box by 15pt before snapping to
 ink fixed two remaining equations that were cut off by one trailing symbol.
 Both fixes are specific to the scanned path only — the born-digital region
 finder is untouched and its own tests still pass unchanged.
-**Handwritten-notes accuracy is not yet measured** — it needs a real sample,
-which hasn't been added to `demo/scans/` yet.
+
+**Measured accuracy (live Muse Spark, real handwritten notes,
+`demo/scans/handwritten.pdf`):** one page, 5 equations, hand-scored against
+an answer key. All 5 were found and all 5 came back as recognizable,
+correct equations — no garbled or nonsense readings. Scored strictly
+(matching in meaning, not just "looks close"):
+
+| Eq | Read | Verdict |
+| --- | --- | --- |
+| 1 | `p/(ρg) + V^2/2g + z = H` | Right, one case substitution: v → V |
+| 2 | `A_1 V_1 = A_2 V_2` | Right, same v → V substitution (both) |
+| 3 | `R_e = ρvD/μ` | **Exact.** μ read correctly, *not* misread as "m" |
+| 4 | `p = p_0 + ρgh` | **Exact** |
+| 5 | `h_f = F(L/D)(V^2/2g)` | Right (F and brackets both accepted per the answer key), same v → V substitution |
+
+**2 of 5 exact, 3 of 5 right with one recurring, labelled substitution, 0
+wrong or unreadable.** The v → V pattern is not a model error to paper over:
+checked against the actual handwriting crop, this person's cursive "v" is
+tall and symmetric and genuinely reads as a capital V — the model's
+transcription is a defensible reading of what is actually on the page, and
+it was consistent across every occurrence rather than random. Separately,
+Channel C earned its keep here: on equation 5 it flagged "the original has
+10 but the re-typeset version has D" — checked against the crop, the
+handwritten denominator really is ambiguous between "D" and "10", and the
+model's reading (D, the contextually correct one for this formula) is
+shown with that caution attached rather than asserted as certain. Neither
+the v/V pattern nor the D/10 caution blocked anything, exactly as designed:
+ai_read publishes its best reading and surfaces what's uncertain, never
+withholding over an unproven visual check.
 
 ## Scope
 

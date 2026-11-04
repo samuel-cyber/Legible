@@ -1,11 +1,12 @@
 """Feature: scanned and handwritten pages (branch ``scans``).
 
-A page with no usable glyph layer can be read, never proven, so it must
-never reach "verified" or "repaired" -- only "ai_read" or "withheld". These
-tests cover detection, the soft Tesseract dependency, the new decision rule
-in isolation, and the pipeline end to end on a rasterized (image-only) copy
-of the demo page -- plus the hard regression: a born-digital run through the
-same pipeline code must be byte-for-byte unchanged.
+A page with no usable glyph layer can be read, never independently
+verified, so it must never reach "verified" or "repaired" -- only
+"ai_read" or "withheld". These tests cover detection, the soft Tesseract
+dependency, the new decision rule in isolation, and the pipeline end to end
+on a rasterized (image-only) copy of the demo page -- plus the hard
+regression: a born-digital run through the same pipeline code must be
+byte-for-byte unchanged.
 """
 from __future__ import annotations
 
@@ -224,3 +225,16 @@ def test_born_digital_pipeline_output_is_byte_for_byte_unchanged(tmp_path):
     )
     assert out["summary"] == {"verified": 4, "repaired": 1, "withheld": 1}
     assert all(not p.is_scan for p in out["pages"])
+
+
+# -------------------------------------------- real handwritten notes asset
+
+HANDWRITTEN_PDF = os.path.join(ROOT, "demo", "scans", "handwritten.pdf")
+
+
+@pytest.mark.skipif(not os.path.exists(HANDWRITTEN_PDF), reason="no handwritten sample provided")
+def test_handwritten_pdf_is_detected_as_scanned():
+    """Offline, no API call: just confirms the real asset routes correctly."""
+    page = load_page(HANDWRITTEN_PDF, 0)
+    assert page.glyphs == []
+    assert is_scanned_page(page, HANDWRITTEN_PDF, 0)
