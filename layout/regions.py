@@ -230,6 +230,76 @@ def propose_regions(page: Page, page_png: str, ask=None) -> list[BBox]:
     return parse_regions(page, data)
 
 
+def find_regions_scanned(page: Page, pdf_path: str, pno: int = 0, ask=None,
+                         page_png: str | None = None, zoom: float = 4.0) -> list[BBox]:
+    """Display-equation boxes on a scanned/handwritten page.
+
+    The default zoom is higher than ``find_regions``' model mode (2.0): on a
+    rasterized page the model's box coordinates drifted further off true
+    position the lower on the page it looked (measured on the demo page:
+    +18pt at the top growing to +80pt near the bottom at zoom=2.0) -- it
+    needs a sharper image to judge position accurately on what is, to it,
+    a photo rather than clean vector text. At zoom=4.0 the same page's
+    coordinates landed within a few points everywhere. A born-digital page
+    does not have this problem (there is nothing to re-render sharper; the
+    PDF's own text is already exact), which is why that path's default stays
+    untouched.
+
+    There is no glyph layer to cross-check against or to snap to, so this is
+    deliberately simpler than ``find_regions``: the model proposes boxes,
+    each is validated (on-page, big enough) and snapped to *ink*
+    (``ingest.scan.snap_to_ink``) rather than to glyphs. A box with no ink in
+    it is dropped. If the model call fails or proposes nothing, this returns
+    an empty list -- there is no heuristic fallback for a page with no math
+    font to look for, so the caller finds no equations rather than guessing.
+    """
+    from ingest.scan import snap_to_ink
+
+    # The model's box is sometimes a few points too tight on one edge (seen
+    # on the demo page: the right edge underestimated by 9-13pt, clipping
+    # off a trailing symbol like "H" or a subscript). snap_to_ink only ever
+    # shrinks toward real ink, so a too-tight proposal permanently loses
+    # that content; padding the candidate box first gives it room to find
+    # ink the model missed, while staying well inside the gap to the next
+    # equation so it can never merge two together.
+    pad = 15.0
+
+    try:
+        if page_png is None:
+            page_png = render_page(pdf_path, pno, zoom=zoom)
+        ask = ask or (lambda prompt, images=(), schema=None: meta.ask_json(
+            prompt, images=images, schema=schema))
+        prompt = _PAGE_PROMPT.format(w=page.width, h=page.height)
+        data = ask(prompt, images=[page_png], schema=REGIONS_SCHEMA)
+    except Exception as e:
+        log.warning("scanned-page region proposal failed (%s); no equations found", e)
+        return []
+    if not isinstance(data, dict):
+        log.warning("scanned-page region model did not return a JSON object")
+        return []
+
+    boxes: list[BBox] = []
+    for r in data.get("regions", []):
+        try:
+            box = _normalize((float(r["x0"]), float(r["y0"]), float(r["x1"]), float(r["y1"])))
+        except (KeyError, TypeError, ValueError):
+            log.warning("dropping malformed model region %r", r)
+            continue
+        if not valid_box(page, box):
+            log.warning("dropping invalid model region %r", box)
+            continue
+        padded = (
+            max(0.0, box[0] - pad), max(0.0, box[1] - pad),
+            min(page.width, box[2] + pad), min(page.height, box[3] + pad),
+        )
+        snapped = snap_to_ink(pdf_path, pno, padded)
+        if snapped is None:
+            log.warning("dropping model region with no ink: %r", box)
+            continue
+        boxes.append(snapped)
+    return in_reading_order(_dedupe(boxes))
+
+
 def find_regions(page: Page, pdf_path: str | None = None, pno: int = 0,
                  mode: str = "heuristic", ask=None, page_png: str | None = None,
                  zoom: float = 2.0) -> list[tuple[BBox, str]]:

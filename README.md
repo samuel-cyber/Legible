@@ -139,6 +139,71 @@ of the code in this repository — full methodology in `eval/EVAL_REPORT.md`.
   why the live repair-success metric reads 0%: a token-equality bug in the
   *metric*, not a failed repair).
 
+## Trust levels
+
+Legible reports two distinct trust levels, and the status badge always says
+which one an equation got:
+
+- **verified / repaired** — born-digital pages. The reading is independently
+  verified against the PDF's own text layer (see Results above): 0% false
+  accept, 23.7% false reject, measured on 152 real equations.
+- **ai_read** — scanned or handwritten pages (`ingest/scan.py` detects these:
+  no text layer at all, or a page dominated by one raster image even if an
+  OCR layer sits on top). There are no stored characters to check against, so
+  an equation here can be *read* but never *independently verified* — status
+  is "ai_read", never "verified", however clean the reading looks. Channel C
+  (render-back) and any OCR text inside the region are cautions only; neither
+  can withhold or verify an ai_read equation. The only way to withhold here
+  is Channel A itself failing or returning invalid LaTeX.
+
+**Measured accuracy (live Muse Spark, image-only fluids demo page):** the
+page was rasterized to a single embedded image with zero text layer
+(`demo/scans/build.py`), run through the real pipeline end to end, and every
+reading compared against the same gold LaTeX used throughout this README.
+**Result: 6/6 equations read exactly correctly.**
+
+That number came from real debugging, not a lucky first run, worth stating
+honestly: the first live attempt found 0/6 usable readings — the
+region-proposal model's box coordinates drifted further off the true
+position the lower it looked on the page (a few points at the top, tens of
+points by the bottom), because at the default render resolution a rasterized
+page gives it far less to work with than the clean vector text the same
+model-region code already handles well on a born-digital page. Rendering the
+proposal image at a higher zoom (4.0 instead of 2.0) fixed the drift to a
+few points everywhere; padding each proposed box by 15pt before snapping to
+ink fixed two remaining equations that were cut off by one trailing symbol.
+Both fixes are specific to the scanned path only — the born-digital region
+finder is untouched and its own tests still pass unchanged.
+
+**Measured accuracy (live Muse Spark, real handwritten notes,
+`demo/scans/handwritten.pdf`):** one page, 5 equations, hand-scored against
+an answer key. All 5 were found and all 5 came back as recognizable,
+correct equations — no garbled or nonsense readings. Scored strictly
+(matching in meaning, not just "looks close"):
+
+| Eq | Read | Verdict |
+| --- | --- | --- |
+| 1 | `p/(ρg) + V^2/2g + z = H` | Right, one case substitution: v → V |
+| 2 | `A_1 V_1 = A_2 V_2` | Right, same v → V substitution (both) |
+| 3 | `R_e = ρvD/μ` | **Exact.** μ read correctly, *not* misread as "m" |
+| 4 | `p = p_0 + ρgh` | **Exact** |
+| 5 | `h_f = F(L/D)(V^2/2g)` | Right (F and brackets both accepted per the answer key), same v → V substitution |
+
+**2 of 5 exact, 3 of 5 right with one recurring, labelled substitution, 0
+wrong or unreadable.** The v → V pattern is not a model error to paper over:
+checked against the actual handwriting crop, this person's cursive "v" is
+tall and symmetric and genuinely reads as a capital V — the model's
+transcription is a defensible reading of what is actually on the page, and
+it was consistent across every occurrence rather than random. Separately,
+Channel C earned its keep here: on equation 5 it flagged "the original has
+10 but the re-typeset version has D" — checked against the crop, the
+handwritten denominator really is ambiguous between "D" and "10", and the
+model's reading (D, the contextually correct one for this formula) is
+shown with that caution attached rather than asserted as certain. Neither
+the v/V pattern nor the D/10 caution blocked anything, exactly as designed:
+ai_read publishes its best reading and surfaces what's uncertain, never
+withholding over an unproven visual check.
+
 ## Scope
 
 Born-digital PDFs with a real text layer. Scanned pages have no glyph layer,
