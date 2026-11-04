@@ -6,6 +6,7 @@ Run with:
 Endpoints
     GET  /                     the upload UI (app/static/index.html)
     POST /jobs                 upload a PDF (<= 20 MB), returns {"id": ...}
+    POST /jobs/sample          run the bundled sample lecture, offline, no API key needed
     GET  /jobs/{id}/events     Server-Sent Events of the pipeline's on_event dicts
     GET  /jobs/{id}/page       the generated accessible page (index.html)
     GET  /jobs/{id}/report     the generated verification report (report.html)
@@ -37,6 +38,8 @@ from pipeline import process, replay_reader  # noqa: E402
 MAX_BYTES = 20 * 1024 * 1024          # 20 MB
 CHUNK = 1024 * 1024
 PDF_MAGIC = b"%PDF"
+SAMPLE_PDF = os.path.join(ROOT, "demo", "pages", "fluids.pdf")
+SAMPLE_REPLAY = os.path.join(ROOT, "demo", "replay_fluids.json")
 
 app = FastAPI(title="Legible", description="Verified STEM accessibility")
 
@@ -158,6 +161,40 @@ async def create_job(file: UploadFile = File(...), use_glyphs: bool = True) -> J
     with JOBS_LOCK:
         JOBS[job_id] = job
     threading.Thread(target=_run_job, args=(job, use_glyphs), daemon=True).start()
+    return JSONResponse({"id": job_id})
+
+
+def _run_sample_job(job: Job) -> None:
+    """Like ``_run_job``, but always offline: the bundled sample PDF with its
+    stored replay readings. No API calls are ever made (Channel C is off),
+    same contract as the CLI's ``--replay``, so this works with no key set."""
+    try:
+        transcribe, repair = replay_reader(SAMPLE_REPLAY)
+        result = process(
+            job.source_pdf, job.outdir,
+            transcribe=transcribe, repair=repair, compare=False,
+            on_event=job.emit,
+        )
+        job.emit({"type": "finished", "summary": result["summary"]})
+    except Exception as e:
+        job.fail(f"{type(e).__name__}: {e}")
+    finally:
+        with job.cond:
+            job.finished = True
+            job.cond.notify_all()
+
+
+@app.post("/jobs/sample")
+def create_sample_job() -> JSONResponse:
+    """Run the bundled sample lecture (demo/pages/fluids.pdf) with its stored
+    replay readings -- no upload, no API key needed. Reuses the same
+    Job/SSE flow as a real upload."""
+    job_id = uuid.uuid4().hex
+    outdir = tempfile.mkdtemp(prefix=f"legible-sample-{job_id}-")
+    job = Job(id=job_id, outdir=outdir, source_pdf=SAMPLE_PDF)
+    with JOBS_LOCK:
+        JOBS[job_id] = job
+    threading.Thread(target=_run_sample_job, args=(job,), daemon=True).start()
     return JSONResponse({"id": job_id})
 
 

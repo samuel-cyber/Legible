@@ -5,24 +5,45 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Verification report · {{ title }}</title>
 <style>
-  :root { --bg:#fbfaf7; --ink:#1d1d1b; --muted:#5d5b55; --rule:#e2dfd7; --ok:#1f6b45; --fix:#7a4b00; --stop:#9b2226; --ai:#5b4b8a; --panel:#fff; }
-  @media (prefers-color-scheme: dark) { :root { --bg:#151514; --ink:#ecebe6; --muted:#a8a59c; --rule:#34332f; --ok:#6fcf97; --fix:#f2b54b; --stop:#ff8a80; --ai:#b8a6ff; --panel:#1f1e1c; } }
+  :root {
+    --bg:#faf8f3; --panel:#ffffff; --ink:#1a1816; --muted:#5c574e; --rule:#e3ddd0;
+    --accent:#0d5c5c;
+    --ok:#1c6b3a; --ok-bg:#dcefe2; --fix:#8a5a00; --fix-bg:#f6ecd2;
+    --stop:#9b2226; --stop-bg:#f5dcdc; --ai:#3d5a8c; --ai-bg:#e3e8f3;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:#15181a; --panel:#1c2023; --ink:#ecebe6; --muted:#a8a59c; --rule:#32383c;
+      --accent:#6fd0d0;
+      --ok:#6fcf97; --ok-bg:#1c3326; --fix:#f2b54b; --fix-bg:#3a2e14;
+      --stop:#ff8a80; --stop-bg:#3a1f1f; --ai:#9db4e0; --ai-bg:#1f2838;
+    }
+  }
   * { box-sizing: border-box; }
-  body { margin:0; background:var(--bg); color:var(--ink); font: 15px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
-  main { max-width: 64rem; margin: 0 auto; padding: 40px 20px 80px; }
-  h1 { font-size: 1.7rem; margin: 0 0 4px; } .sub { color: var(--muted); margin: 0 0 28px; }
-  .tally { display:flex; gap: 12px; flex-wrap: wrap; margin-bottom: 28px; }
-  .tally div { background: var(--panel); border:1px solid var(--rule); border-radius: 10px; padding: 12px 16px; min-width: 120px; }
-  .tally b { display:block; font-size: 1.6rem; } .tally span { color: var(--muted); font-size: 13px; }
-  article { background: var(--panel); border:1px solid var(--rule); border-radius: 12px; padding: 18px; margin-bottom: 16px; }
-  .row { display:grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 18px; }
+  body { margin:0; background:var(--bg); color:var(--ink); font: 15.5px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  a { color: var(--accent); }
+  main { max-width: 1100px; margin: 0 auto; padding: 48px 24px 90px; }
+  h1 { font-size: 1.8rem; margin: 0 0 4px; } .sub { color: var(--muted); margin: 0 0 30px; }
+  .tally { display:flex; gap: 12px; flex-wrap: wrap; margin-bottom: 30px; }
+  .tally div { background: var(--panel); border:1px solid var(--rule); border-radius: 12px; padding: 14px 18px; min-width: 130px; }
+  .tally b { display:block; font-size: 1.7rem; } .tally span { color: var(--muted); font-size: 13px; }
+  article { background: var(--panel); border:1px solid var(--rule); border-radius: 14px; padding: 22px; margin-bottom: 18px; }
+  article.status-repaired { border-left: 4px solid var(--fix); }
+  article.status-withheld { border-left: 4px solid var(--stop); }
+  .row { display:grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 20px; }
   @media (max-width: 720px) { .row { grid-template-columns: 1fr; } }
-  .crop img { max-width: 100%; background: #fff; border-radius: 6px; border:1px solid var(--rule); }
-  .label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 0 0 6px; }
-  .badge { display:inline-block; font-weight: 700; font-size: 12px; padding: 3px 9px; border-radius: 999px; border: 1.5px solid currentColor; }
+  .crop img { max-width: 100%; background: #fff; border-radius: 8px; border:1px solid var(--rule); }
+  .label { font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 0 0 7px; }
+  .badge { display:inline-block; font-weight: 700; font-size: 12px; padding: 4px 11px; border-radius: 999px; }
+  .badge.verified { background: var(--ok-bg); color: var(--ok); }
+  .badge.repaired { background: var(--fix-bg); color: var(--fix); }
+  .badge.withheld { background: var(--stop-bg); color: var(--stop); }
+  .badge.ai_read { background: var(--ai-bg); color: var(--ai); }
   .verified { color: var(--ok); } .repaired { color: var(--fix); } .withheld { color: var(--stop); } .ai_read { color: var(--ai); }
-  table.pages { border-collapse: collapse; margin: 0 0 28px; font-size: 14px; }
-  table.pages th, table.pages td { text-align: left; padding: 6px 14px; border-bottom: 1px solid var(--rule); }
+  table.pages { border-collapse: collapse; margin: 0 0 28px; font-size: 14px; background: var(--panel);
+                border: 1px solid var(--rule); border-radius: 12px; overflow: hidden; }
+  table.pages th, table.pages td { text-align: left; padding: 9px 16px; border-bottom: 1px solid var(--rule); }
   code { font-family: ui-monospace, monospace; font-size: 13px; word-break: break-word; }
   ol.attempts { margin: 10px 0 0; padding-left: 20px; } ol.attempts li { margin-bottom: 8px; }
   .diff { color: var(--stop); } .muted { color: var(--muted); }
@@ -30,13 +51,13 @@
   .tag { display:inline-block; font-weight:700; font-size:11px; padding:1px 7px; border-radius:999px;
          border:1.5px solid currentColor; text-transform:uppercase; letter-spacing:.04em; margin-right:6px; }
   math { font-size: 1.15em; }
-  details { margin-top: 12px; }
-  details summary { cursor: pointer; font-size: 13px; font-weight: 600; color: var(--muted); }
-  details[open] summary { margin-bottom: 8px; }
-  ol.timeline { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-wrap: wrap;
+  details { margin-top: 14px; }
+  details summary { cursor: pointer; font-size: 13px; font-weight: 700; color: var(--muted); }
+  details[open] summary { margin-bottom: 10px; }
+  ol.timeline { list-style: none; margin: 16px 0 0; padding: 0; display: flex; flex-wrap: wrap;
                 gap: 6px; align-items: center; font-size: 13.5px; }
-  ol.timeline li { background: var(--bg); border: 1px solid var(--rule); border-radius: 7px;
-                   padding: 5px 10px; }
+  ol.timeline li { background: var(--bg); border: 1px solid var(--rule); border-radius: 8px;
+                   padding: 6px 11px; }
   ol.timeline li:not(:last-child)::after { content: "→"; margin-left: 10px; color: var(--muted); }
   ol.timeline li.outcome-verified, ol.timeline li.outcome-ai_read { border-color: var(--ok); color: var(--ok); }
   ol.timeline li.outcome-withheld { border-color: var(--stop); color: var(--stop); }
@@ -72,7 +93,7 @@
   </table>
   {% endif %}
   {% for r in results %}
-  <article aria-labelledby="h-{{ r.id }}">
+  <article aria-labelledby="h-{{ r.id }}" class="status-{{ r.status }}">
     <h2 id="h-{{ r.id }}" style="font-size:1.05rem;margin:0 0 12px">Equation {{ loop.index }} <span class="badge {{ r.status }}">{{ "AI-read" if r.status == "ai_read" else r.status }}</span></h2>
     <div class="row">
       <div class="crop">
