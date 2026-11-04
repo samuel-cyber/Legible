@@ -17,7 +17,7 @@ The rule depends on whether the glyph layer (B) is available:
 
 Why: measured against real runs, C is a much weaker signal than the exact,
 deterministic glyph layer. When B is present, letting an over-eager C (or a C
-that cannot run) withhold a reading that provably matches the PDF text layer
+that cannot run) withhold a reading that is independently verified against the PDF text layer
 would only cause false rejects. When B is absent there is nothing to fall back
 on, so C is used as a gate and fails closed.
 

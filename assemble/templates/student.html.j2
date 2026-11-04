@@ -25,6 +25,15 @@
   .glossary-label { font: 600 13px/1 system-ui, sans-serif; margin: 12px 0 0; color: var(--muted); }
   footer { margin-top: 64px; padding-top: 16px; border-top: 1px solid var(--rule); color: var(--muted); font: 14px/1.5 system-ui, sans-serif; }
   a { color: inherit; }
+  .ask { margin: 14px 0 0; padding-top: 12px; border-top: 1px dashed var(--rule); font: 15px/1.5 system-ui, sans-serif; }
+  .ask label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 5px; }
+  .ask-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .ask-input { flex: 1 1 14rem; font: inherit; padding: 6px 9px; border: 1px solid var(--rule); border-radius: 6px;
+               background: var(--bg); color: var(--ink); }
+  .ask-button { font: 600 14px system-ui, sans-serif; padding: 6px 14px; border: 1px solid var(--ink);
+                border-radius: 6px; background: var(--ink); color: var(--bg); cursor: pointer; }
+  .ask-answer { margin: 8px 0 0; min-height: 1.4em; }
+  .ask-answer ol { margin: 6px 0 0; padding-left: 20px; }
 </style>
 </head>
 <body>
@@ -55,10 +64,125 @@
             {% for sym, meaning in b.glossary %}<dt>{{ sym }}</dt><dd>{{ meaning }}</dd>{% endfor %}
           </dl>
         {% endif %}
+        {% if b.eq_id in facts %}
+          <div class="ask" data-eq="{{ b.eq_id }}">
+            <script type="application/json" class="ask-facts">{{ facts[b.eq_id] | safe }}</script>
+            <label for="ask-input-{{ b.eq_id }}">Ask about this equation (structure only, no AI)</label>
+            <div class="ask-row">
+              <input type="text" id="ask-input-{{ b.eq_id }}" class="ask-input"
+                     placeholder="e.g. what's in the numerator?">
+              <button type="button" class="ask-button">Ask</button>
+            </div>
+            <div class="ask-answer" role="status" aria-live="polite"></div>
+          </div>
+        {% endif %}
       </div>
     {% endif %}
   {% endfor %}
   <footer>Made accessible by Legible. Every equation shown as math was checked against the original PDF. <a href="{{ report_href }}">Verification report</a></footer>
 </main>
+<script>
+(function () {
+  "use strict";
+  var REFUSAL = "I can only answer questions about this equation's structure.";
+
+  function stripPunct(s) { return s.replace(/^[?.,!'"]+|[?.,!'"]+$/g, ""); }
+
+  function listFractions(fractions, key) {
+    if (!fractions.length) return "There's no fraction in this equation.";
+    if (fractions.length === 1) {
+      return "The " + (key === "num" ? "numerator" : "denominator") + " is: " + fractions[0][key];
+    }
+    var lines = fractions.map(function (f, i) { return "Fraction " + (i + 1) + ": " + f[key] + "."; });
+    return "This equation has " + fractions.length + " fractions. " + lines.join(" ");
+  }
+
+  function scriptAnswer(facts, sym, role, word, article) {
+    var entry = facts.scripts[sym];
+    if (!entry) return "'" + sym + "' doesn't appear in this equation.";
+    var val = entry[role];
+    if (!val) return "'" + sym + "' doesn't have " + article + " " + word + " here.";
+    return "The " + word + " of '" + sym + "' is: " + val;
+  }
+
+  function insideBrackets(brackets) {
+    if (!brackets.length) return "There are no brackets in this equation.";
+    if (brackets.length === 1) return "Inside the brackets: " + brackets[0];
+    var lines = brackets.map(function (b, i) { return "Bracket " + (i + 1) + ": " + b; });
+    return "This equation has " + brackets.length + " bracketed groups. " + lines.join(" ");
+  }
+
+  function bracketAfter(facts, sym) {
+    return facts.bracket_after[sym] || ("'" + sym + "' doesn't appear in this equation.");
+  }
+
+  function glossaryAnswer(glossary, sym) {
+    var hit = glossary[sym.toLowerCase()];
+    return hit ? ("'" + sym + "' is " + hit) : "The notes don't say.";
+  }
+
+  // Mirrors equations/ask.py's question categories; the structural facts
+  // themselves (fractions, scripts, brackets, spoken_parts, glossary) are
+  // computed once in Python and embedded as JSON, never re-derived here.
+  function answerQuestion(facts, question) {
+    var q = (question || "").trim();
+    if (!q) return { text: REFUSAL };
+    var m;
+    if (/\bnumerator\b/i.test(q)) return { text: listFractions(facts.fractions, "num") };
+    if (/\bdenominator\b/i.test(q)) return { text: listFractions(facts.fractions, "den") };
+    if ((m = q.match(/\bexponent\b.*?\bof\b\s+(\S+)/i))) {
+      return { text: scriptAnswer(facts, stripPunct(m[1]), "sup", "exponent", "an") };
+    }
+    if ((m = q.match(/\bsubscript\b.*?\bof\b\s+(\S+)/i))) {
+      return { text: scriptAnswer(facts, stripPunct(m[1]), "sub", "subscript", "a") };
+    }
+    if ((m = q.match(/\bwhich\s+bracket\b.*?\bafter\b\s+(\S+)/i))) {
+      return { text: bracketAfter(facts, stripPunct(m[1])) };
+    }
+    if ((m = q.match(/\bclos(?:es|e)\s+after\b\s+(\S+)/i))) {
+      return { text: bracketAfter(facts, stripPunct(m[1])) };
+    }
+    if (/\binside\b.*?\bbracket/i.test(q)) return { text: insideBrackets(facts.brackets) };
+    if (/\bread\b.*?\bslow/i.test(q)) {
+      return { text: "Reading it slowly, one part at a time.", parts: facts.spoken_parts };
+    }
+    if ((m = q.match(/\bwhat\s+does\b\s+(\S+)\s+mean\b/i))) {
+      return { text: glossaryAnswer(facts.glossary, stripPunct(m[1])) };
+    }
+    if ((m = q.match(/\bmeaning\s+of\b\s+(\S+)/i))) {
+      return { text: glossaryAnswer(facts.glossary, stripPunct(m[1])) };
+    }
+    return { text: REFUSAL };
+  }
+
+  var boxes = document.querySelectorAll(".ask");
+  boxes.forEach(function (box) {
+    var facts = JSON.parse(box.querySelector(".ask-facts").textContent);
+    var input = box.querySelector(".ask-input");
+    var button = box.querySelector(".ask-button");
+    var answerBox = box.querySelector(".ask-answer");
+
+    function run() {
+      var result = answerQuestion(facts, input.value);
+      answerBox.innerHTML = "";
+      answerBox.appendChild(document.createTextNode(result.text));
+      if (result.parts) {
+        var ol = document.createElement("ol");
+        result.parts.forEach(function (p) {
+          var li = document.createElement("li");
+          li.textContent = p;
+          ol.appendChild(li);
+        });
+        answerBox.appendChild(ol);
+      }
+    }
+
+    button.addEventListener("click", run);
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") { e.preventDefault(); run(); }
+    });
+  });
+})();
+</script>
 </body>
 </html>
