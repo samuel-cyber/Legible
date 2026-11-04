@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Verification report · {{ title }}</title>
 <style>
-  :root { --bg:#fbfaf7; --ink:#1d1d1b; --muted:#5d5b55; --rule:#e2dfd7; --ok:#1f6b45; --fix:#7a4b00; --stop:#9b2226; --panel:#fff; }
-  @media (prefers-color-scheme: dark) { :root { --bg:#151514; --ink:#ecebe6; --muted:#a8a59c; --rule:#34332f; --ok:#6fcf97; --fix:#f2b54b; --stop:#ff8a80; --panel:#1f1e1c; } }
+  :root { --bg:#fbfaf7; --ink:#1d1d1b; --muted:#5d5b55; --rule:#e2dfd7; --ok:#1f6b45; --fix:#7a4b00; --stop:#9b2226; --ai:#5b4b8a; --panel:#fff; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#151514; --ink:#ecebe6; --muted:#a8a59c; --rule:#34332f; --ok:#6fcf97; --fix:#f2b54b; --stop:#ff8a80; --ai:#b8a6ff; --panel:#1f1e1c; } }
   * { box-sizing: border-box; }
   body { margin:0; background:var(--bg); color:var(--ink); font: 15px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
   main { max-width: 64rem; margin: 0 auto; padding: 40px 20px 80px; }
@@ -20,7 +20,9 @@
   .crop img { max-width: 100%; background: #fff; border-radius: 6px; border:1px solid var(--rule); }
   .label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 0 0 6px; }
   .badge { display:inline-block; font-weight: 700; font-size: 12px; padding: 3px 9px; border-radius: 999px; border: 1.5px solid currentColor; }
-  .verified { color: var(--ok); } .repaired { color: var(--fix); } .withheld { color: var(--stop); }
+  .verified { color: var(--ok); } .repaired { color: var(--fix); } .withheld { color: var(--stop); } .ai_read { color: var(--ai); }
+  table.pages { border-collapse: collapse; margin: 0 0 28px; font-size: 14px; }
+  table.pages th, table.pages td { text-align: left; padding: 6px 14px; border-bottom: 1px solid var(--rule); }
   code { font-family: ui-monospace, monospace; font-size: 13px; word-break: break-word; }
   ol.attempts { margin: 10px 0 0; padding-left: 20px; } ol.attempts li { margin-bottom: 8px; }
   .diff { color: var(--stop); } .muted { color: var(--muted); }
@@ -48,11 +50,30 @@
     <div><b>{{ summary.total }}</b><span>equations</span></div>
     <div><b class="verified">{{ summary.verified }}</b><span>verified</span></div>
     <div><b class="repaired">{{ summary.repaired }}</b><span>repaired</span></div>
+    {% if summary.ai_read %}<div><b class="ai_read">{{ summary.ai_read }}</b><span>AI-read (not proven)</span></div>{% endif %}
     <div><b class="withheld">{{ summary.withheld }}</b><span>withheld</span></div>
   </div>
+  {% if pages %}
+  <table class="pages">
+    <caption class="label" style="text-align:left">Trust level per page</caption>
+    <tr><th>Page</th><th>Trust level</th></tr>
+    {% for p in pages %}
+    <tr>
+      <td>{{ p.number }}</td>
+      <td>
+        {% if p.is_scan %}
+          <span class="ai_read">Scan/handwritten — AI reading only{% if p.body_text_source %}, body text read by {{ "OCR" if p.body_text_source == "ocr" else "AI" }}{% endif %}</span>
+        {% else %}
+          <span class="verified">Born-digital — checked against the PDF</span>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% endif %}
   {% for r in results %}
   <article aria-labelledby="h-{{ r.id }}">
-    <h2 id="h-{{ r.id }}" style="font-size:1.05rem;margin:0 0 12px">Equation {{ loop.index }} <span class="badge {{ r.status }}">{{ r.status }}</span></h2>
+    <h2 id="h-{{ r.id }}" style="font-size:1.05rem;margin:0 0 12px">Equation {{ loop.index }} <span class="badge {{ r.status }}">{{ "AI-read" if r.status == "ai_read" else r.status }}</span></h2>
     <div class="row">
       <div class="crop">
         <p class="label">Original</p>
@@ -90,10 +111,18 @@
             {% for d in a.visual_diffs %}<div class="diff">Image comparison: {{ d }}</div>{% endfor %}
           {% endif %}
           {% if a.parse_error %}<div class="diff">{{ a.parse_error }}</div>{% endif %}
-          {% if a.passed %}<div class="verified">All checks passed.</div>{% endif %}
+          {% if r.status != "ai_read" and a.passed %}<div class="verified">All checks passed.</div>{% endif %}
         </li>
         {% endfor %}
       </ol>
+      {% if r.status == "ai_read" %}
+        <p class="label" style="margin-top:12px">Cautions (advisory only; never withholds an AI reading)</p>
+        {% if r.cautions %}
+          {% for c in r.cautions %}<div class="advisory"><span class="tag">advisory</span>{{ c }}</div>{% endfor %}
+        {% else %}
+          <p class="muted" style="margin:0">None raised.</p>
+        {% endif %}
+      {% endif %}
     </details>
   </article>
   {% endfor %}

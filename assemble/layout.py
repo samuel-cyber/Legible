@@ -15,12 +15,39 @@ from ingest.pdf import Page
 
 @dataclass
 class Block:
-    kind: str                 # "heading", "para", "equation"
+    kind: str                 # "heading", "para", "equation", "page_note"
     y: float
     text: str = ""
     level: int = 2
     eq_id: str = ""
     glossary: list[tuple[str, str]] = field(default_factory=list)
+
+
+@dataclass
+class PageInfo:
+    """Per-page trust level, for the report and the student page's note."""
+    number: int                # 1-based
+    is_scan: bool
+    body_text_source: str = ""  # "" (born-digital), "ocr", or "ai"
+
+
+def scan_page_blocks(note: str, body_text: str | None,
+                     equations: list[tuple[str, tuple]]) -> list[Block]:
+    """Blocks for a scanned/handwritten page: a page-level note, the body
+    text (however it was read), then the equations in on-page order.
+
+    Deliberately simpler than ``page_blocks``: there is no reliable line or
+    font-size geometry to detect headings or re-flow paragraphs from (OCR'd
+    or AI-read text on a scan is one best-effort blob, not positioned
+    glyphs), so this does not try to interleave body text with equations by
+    position.
+    """
+    blocks = [Block("page_note", -2.0, text=note)]
+    if body_text:
+        blocks.append(Block("para", -1.0, text=body_text))
+    for eid, bbox in equations:
+        blocks.append(Block("equation", bbox[1], eq_id=eid))
+    return blocks
 
 
 def _line_text(line) -> str:

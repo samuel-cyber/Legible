@@ -16,7 +16,7 @@ _env = Environment(
 
 
 def summarize(results) -> dict:
-    s = {"total": len(results), "verified": 0, "repaired": 0, "withheld": 0}
+    s = {"total": len(results), "verified": 0, "repaired": 0, "withheld": 0, "ai_read": 0}
     for r in results:
         s[r.status] += 1
     return s
@@ -42,9 +42,9 @@ def _data_uri(path) -> str:
 
 def _facts_map(blocks, results) -> dict:
     """JSON-ready structural facts for the "ask about this equation" control,
-    one entry per verified/repaired equation only -- a withheld (or, once
-    the scans feature lands, ai_read) equation's structure was never
-    independently verified, so it gets no entry and no control."""
+    one entry per verified/repaired equation only -- a withheld or ai_read
+    equation's structure was never independently verified, so it gets no
+    entry and no control."""
     from equations.ask import extract_facts
 
     by_id = {r.id: r for r in results}
@@ -63,18 +63,19 @@ def _facts_map(blocks, results) -> dict:
     return out
 
 
-def render_student(title, blocks, results, report_href="report.html") -> str:
+def render_student(title, blocks, results, report_href="report.html", pages=None) -> str:
     by_id = {r.id: r for r in results}
     order = {r.id: i + 1 for i, r in enumerate(results)}
     return _env.get_template("student.html.j2").render(
         title=title, blocks=blocks, results=by_id, mathml=_mathml_map(results),
         summary=summarize(results), loop_index=order, report_href=report_href,
-        facts=_facts_map(blocks, results),
+        facts=_facts_map(blocks, results), pages=pages or [],
     )
 
 
-def render_report(title, results) -> str:
+def render_report(title, results, pages=None) -> str:
     return _env.get_template("report.html.j2").render(
         title=title, results=results, mathml=_mathml_map(results),
         summary=summarize(results), crops={r.id: _data_uri(r.crop_png) for r in results},
+        pages=pages or [],
     )

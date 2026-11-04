@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ title }} · Legible</title>
 <style>
-  :root { --bg:#fbfaf7; --ink:#1d1d1b; --muted:#5d5b55; --rule:#e2dfd7; --ok:#1f6b45; --fix:#7a4b00; --stop:#9b2226; --panel:#f2efe8; }
-  @media (prefers-color-scheme: dark) { :root { --bg:#151514; --ink:#ecebe6; --muted:#a8a59c; --rule:#34332f; --ok:#6fcf97; --fix:#f2b54b; --stop:#ff8a80; --panel:#1f1e1c; } }
+  :root { --bg:#fbfaf7; --ink:#1d1d1b; --muted:#5d5b55; --rule:#e2dfd7; --ok:#1f6b45; --fix:#7a4b00; --stop:#9b2226; --ai:#5b4b8a; --panel:#f2efe8; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#151514; --ink:#ecebe6; --muted:#a8a59c; --rule:#34332f; --ok:#6fcf97; --fix:#f2b54b; --stop:#ff8a80; --ai:#b8a6ff; --panel:#1f1e1c; } }
   * { box-sizing: border-box; }
   body { margin:0; background:var(--bg); color:var(--ink); font: 18px/1.65 Georgia, "Iowan Old Style", serif; }
   .skip { position:absolute; left:-999px; } .skip:focus { left:16px; top:16px; background:var(--ink); color:var(--bg); padding:8px 12px; }
@@ -15,11 +15,14 @@
   h1 { font-size: 2rem; line-height:1.2; margin: 0; }
   h2 { font-size: 1.35rem; margin: 2.2em 0 .4em; } h3 { font-size: 1.1rem; margin: 1.8em 0 .3em; }
   .eq { margin: 1.4em 0; padding: 14px 18px; border-left: 3px solid var(--ok); background: var(--panel); border-radius: 0 8px 8px 0; }
-  .eq.repaired { border-left-color: var(--fix); } .eq.withheld { border-left-color: var(--stop); }
+  .eq.repaired { border-left-color: var(--fix); } .eq.withheld { border-left-color: var(--stop); } .eq.ai_read { border-left-color: var(--ai); }
   .eq math { font-size: 1.2em; }
   .status { font: 600 13px/1 system-ui, sans-serif; letter-spacing:.02em; margin: 10px 0 0; color: var(--ok); }
-  .repaired .status { color: var(--fix); } .withheld .status { color: var(--stop); }
+  .repaired .status { color: var(--fix); } .withheld .status { color: var(--stop); } .ai_read .status { color: var(--ai); }
   .raw { font-family: ui-monospace, monospace; }
+  .page-note { margin: 2em 0 1.4em; padding: 12px 18px; border: 2px dashed var(--muted);
+               border-radius: 8px; font: 600 15px/1.5 system-ui, sans-serif; }
+  .page-note::before { content: "⚠ "; }
   dl.glossary { display:grid; grid-template-columns: max-content 1fr; gap: 2px 14px; margin: 12px 0 0; font: 15px/1.5 system-ui, sans-serif; }
   dl.glossary dt { font-style: italic; font-family: Georgia, serif; } dl.glossary dd { margin: 0; color: var(--muted); }
   .glossary-label { font: 600 13px/1 system-ui, sans-serif; margin: 12px 0 0; color: var(--muted); }
@@ -41,11 +44,13 @@
 <main id="content">
   <header>
     <h1>{{ title }}</h1>
-    <p>{{ summary.total }} equations: {{ summary.verified }} verified, {{ summary.repaired }} repaired, {{ summary.withheld }} not verified.</p>
+    <p>{{ summary.total }} equations: {{ summary.verified }} verified, {{ summary.repaired }} repaired{% if summary.ai_read %}, {{ summary.ai_read }} AI-read (not proven){% endif %}, {{ summary.withheld }} not verified.</p>
   </header>
   {% for b in blocks %}
     {% if b.kind == "heading" %}
       <h{{ b.level }}>{{ b.text }}</h{{ b.level }}>
+    {% elif b.kind == "page_note" %}
+      <p class="page-note">{{ b.text }}</p>
     {% elif b.kind == "para" %}
       <p>{{ b.text }}</p>
     {% elif b.kind == "equation" %}
@@ -54,6 +59,9 @@
         {% if r.status in ["verified", "repaired"] %}
           {{ mathml[b.eq_id] | safe }}
           <p class="status">{% if r.status == "verified" %}Verified against the PDF{% else %}Corrected and verified{% endif %}</p>
+        {% elif r.status == "ai_read" %}
+          {{ mathml[b.eq_id] | safe }}
+          <p class="status">AI reading, not proven against the source{% if r.cautions %} — a check flagged something here{% endif %}</p>
         {% else %}
           <p><strong>Unverified equation.</strong> Legible could not confirm this equation, so it is not read as math. Text found in the PDF, unverified: <span class="raw">{{ r.raw_text }}</span></p>
           <p class="status">Not verified: check with your lecturer or a sighted helper</p>

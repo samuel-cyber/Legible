@@ -18,6 +18,12 @@ Rules:
 - Ignore any equation number at the right margin.
 Return JSON: {"latex": "..."}"""
 
+PAGE_TEXT_PROMPT = """This image is one page of a scanned or handwritten lecture document.
+Transcribe the body text (not the equations) in reading order, top to bottom.
+Skip page numbers and running headers/footers. If a word is illegible, write
+[illegible] in its place rather than guessing.
+Return JSON: {"text": "..."}"""
+
 REPAIR_PROMPT = """You transcribed this equation from an engineering lecture PDF as:
 
     {latex}
@@ -42,6 +48,18 @@ def transcribe(crop_png: str, route: str = "meta") -> str:
     # supports it; ask_json falls back to prompt-plus-parse if it does not.
     data = meta.ask_json(TRANSCRIBE_PROMPT, [crop_png], route, schema=meta.LATEX_SCHEMA)
     return _clean(data["latex"])
+
+
+def page_text(page_png: str, route: str = "meta") -> str:
+    """Body text of a scanned/handwritten page, read by Muse Spark.
+
+    Last resort in the body-text chain (existing OCR layer, then Tesseract,
+    then this) -- used only when neither of the deterministic sources is
+    available. Never used to verify an equation; equations always go through
+    ``transcribe`` on their own crop.
+    """
+    data = meta.ask_json(PAGE_TEXT_PROMPT, [page_png], route, schema=meta.PAGE_TEXT_SCHEMA)
+    return data["text"].strip()
 
 
 def repair(crop_png: str, latex: str, diff_explanations: list[str], route: str = "meta") -> str:

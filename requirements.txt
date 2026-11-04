@@ -7,3 +7,7 @@ python-dotenv>=1.0
 fastapi>=0.110
 uvicorn>=0.29
 python-multipart>=0.0.9
+# Optional: Tesseract OCR for scanned pages (ingest/scan.py). A missing
+# package, or a missing system `tesseract` binary, falls back cleanly --
+# nothing here requires it to be installed.
+pytesseract>=0.3.10

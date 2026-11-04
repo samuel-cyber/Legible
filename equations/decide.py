@@ -38,6 +38,13 @@ from equations.tokens import LatexParseError, Token, diff, latex_to_tokens, spok
 
 VERIFIED, REPAIRED, WITHHELD = "verified", "repaired", "withheld"
 
+# A second, clearly lower trust tier for pages with no usable glyph layer (a
+# scan or a photo of handwriting): the reading can be reported but never
+# proven against the source, so it is never "verified". See
+# decide_scanned_equation below; this status never appears on a page that
+# has a glyph layer.
+AI_READ = "ai_read"
+
 
 @dataclass
 class Attempt:
@@ -74,6 +81,7 @@ class EquationResult:
     attempts: list[Attempt] = field(default_factory=list)
     glyph_form: str = ""            # Channel B structure, for the report
     crop_png: Optional[str] = None
+    cautions: list[str] = field(default_factory=list)   # ai_read only: never gates anything
 
     @property
     def explanation(self) -> str:
@@ -93,6 +101,11 @@ class EquationResult:
             first = self.attempts[0]
             issue = (first.glyph_diffs + first.visual_diffs + [first.parse_error or ""])[0]
             return f"First reading was corrected after a check found: {issue}"
+        if self.status == AI_READ:
+            base = "No glyph layer (Channel B) was available on this page, so Channel A's reading is reported but not proven."
+            if self.cautions:
+                base += " Caution: " + "; ".join(self.cautions)
+            return base
         reasons = (last.glyph_diffs + last.visual_diffs + ([last.parse_error] if last and last.parse_error else [])) if last else []
         return "Could not be verified: " + (reasons[0] if reasons else "no reading available")
 
@@ -107,6 +120,10 @@ class EquationResult:
             return "Checked against the PDF: correct."
         if self.status == REPAIRED:
             return "Corrected after checking."
+        if self.status == AI_READ:
+            if self.cautions:
+                return "AI reading, not proven against the source. A check flagged something here."
+            return "AI reading, not proven against the source."
         return "Couldn't be confirmed, so it isn't read as math."
 
     @property
@@ -165,6 +182,80 @@ def _visual(crop_png: Optional[str], latex: str, compare: Callable, render: Call
         return compare(crop_png, rendered)
     except Exception as e:  # model error, unparseable output, render failure, ...
         return [f"the visual check could not run ({type(e).__name__})"]
+
+
+def _ocr_mismatch(ocr_text: str, latex: str) -> Optional[str]:
+    """A large disagreement between an existing OCR/text-layer snippet inside
+    the equation's region and Channel A's reading. Returns a plain-English
+    caution, or None when they are reasonably close. This is a weak signal
+    only -- it can add a caution, never verify or withhold anything."""
+    import difflib
+    import re
+
+    def _chars(s: str) -> str:
+        return re.sub(r"[^0-9A-Za-z]", "", s).lower()
+
+    reading_chars = _chars(re.sub(r"\\[a-zA-Z]+", "", latex))
+    ocr_chars = _chars(ocr_text)
+    if not reading_chars or not ocr_chars:
+        return None
+    ratio = difflib.SequenceMatcher(a=ocr_chars, b=reading_chars, autojunk=False).ratio()
+    if ratio < 0.4:
+        return f"the page's own text here ({ocr_text!r}) does not closely match the reading ({latex!r})"
+    return None
+
+
+def decide_scanned_equation(
+    eq_id: str,
+    bbox,
+    crop_png: Optional[str],
+    transcribe: Callable[[str], str],
+    compare: Optional[Callable[[str, str], list[str]]] = None,
+    render: Optional[Callable[[str, str], str]] = None,
+    ocr_text: Optional[str] = None,
+    workdir: str = ".",
+) -> EquationResult:
+    """Decision rule for a page with no usable glyph layer (a scan or a photo
+    of handwriting).
+
+    Channel A reads the equation. Channel C (if available) and any OCR text
+    found inside the region are CAUTIONS only -- neither can gate the result,
+    because neither is proof. The only way to withhold here is Channel A
+    itself failing or returning invalid LaTeX, exactly as elsewhere: with no
+    glyph layer there is nothing to repair against, so there is no repair
+    step. A successful, parseable reading is always reported as "ai_read",
+    never "verified" -- that distinction is the entire point of this path.
+    """
+    channels = ["A"]
+    if compare and render:
+        channels.append("C")
+    result = EquationResult(eq_id, tuple(bbox), WITHHELD, None, raw_text="",
+                            glyph_layer=False, channels=channels, crop_png=crop_png)
+
+    try:
+        latex = transcribe(crop_png)
+    except Exception:
+        result.attempts.append(Attempt(
+            "", [], [], parse_error="the reading call failed (Channel A did not return a reading)"))
+        return result
+
+    try:
+        latex_to_tokens(latex)
+    except LatexParseError as e:
+        result.attempts.append(Attempt(latex, [], [], parse_error=f"the reading is not valid LaTeX ({e})"))
+        return result
+
+    cautions: list[str] = []
+    if compare and render and crop_png:
+        cautions.extend(_visual(crop_png, latex, compare, render, workdir, f"{eq_id}_scan"))
+    if ocr_text:
+        mismatch = _ocr_mismatch(ocr_text, latex)
+        if mismatch:
+            cautions.append(mismatch)
+
+    result.attempts.append(Attempt(latex, [], [], parse_error=None))
+    result.status, result.latex, result.cautions = AI_READ, latex, cautions
+    return result
 
 
 def _check_gate(latex: str, crop_png: Optional[str], compare: Optional[Callable],

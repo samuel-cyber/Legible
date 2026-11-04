@@ -258,6 +258,7 @@ def json_schema(name: str, properties: dict, required: list[str]) -> dict:
 
 
 LATEX_SCHEMA = json_schema("latex", {"latex": {"type": "string"}}, ["latex"])
+PAGE_TEXT_SCHEMA = json_schema("page_text", {"text": {"type": "string"}}, ["text"])
 COMPARE_SCHEMA = json_schema(
     "differences",
     {"differences": {"type": "array", "items": {"type": "string"}}},
