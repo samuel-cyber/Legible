@@ -50,7 +50,7 @@
     <div><b>{{ summary.total }}</b><span>equations</span></div>
     <div><b class="verified">{{ summary.verified }}</b><span>verified</span></div>
     <div><b class="repaired">{{ summary.repaired }}</b><span>repaired</span></div>
-    {% if summary.ai_read %}<div><b class="ai_read">{{ summary.ai_read }}</b><span>AI-read (not proven)</span></div>{% endif %}
+    {% if summary.ai_read %}<div><b class="ai_read">{{ summary.ai_read }}</b><span>AI-read (not independently verified)</span></div>{% endif %}
     <div><b class="withheld">{{ summary.withheld }}</b><span>withheld</span></div>
   </div>
   {% if pages %}

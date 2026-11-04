@@ -183,7 +183,10 @@ def _process_scanned_page(page, pdf_path, pno, transcribe, compare, render, crop
     page_png = None
     if not body_text:
         try:
-            page_png = region_finder.render_page(pdf_path, pno, zoom=2.0)
+            # Same zoom as find_regions_scanned's default below -- a scanned
+            # page needs a sharp image for the model to read or locate
+            # anything accurately (see that function's docstring).
+            page_png = region_finder.render_page(pdf_path, pno, zoom=4.0)
             body_text = vision.page_text(page_png)
             source = "ai" if body_text else ""
         except Exception:
@@ -215,9 +218,10 @@ def _process_scanned_page(page, pdf_path, pno, transcribe, compare, render, crop
     with ThreadPoolExecutor(max_workers=workers) as pool:
         results = list(pool.map(run, jobs))
 
-    note = "This page is a scan or handwritten, so equations couldn't be proven against the original."
+    note = ("This page is a scan or handwritten, so equations couldn't be "
+            "independently verified against the original.")
     if source:
-        note += f" Body text: text read by {'OCR' if source == 'ocr' else 'AI'}."
+        note += f" Body text read by {'OCR' if source == 'ocr' else 'AI'}."
     blocks = scan_page_blocks(note, body_text, [(r.id, r.bbox) for r in results])
     return results, blocks, PageInfo(number=pno + 1, is_scan=True, body_text_source=source)
 

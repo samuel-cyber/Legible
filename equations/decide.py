@@ -40,7 +40,7 @@ VERIFIED, REPAIRED, WITHHELD = "verified", "repaired", "withheld"
 
 # A second, clearly lower trust tier for pages with no usable glyph layer (a
 # scan or a photo of handwriting): the reading can be reported but never
-# proven against the source, so it is never "verified". See
+# independently verified against the source, so it is never "verified". See
 # decide_scanned_equation below; this status never appears on a page that
 # has a glyph layer.
 AI_READ = "ai_read"
@@ -102,7 +102,7 @@ class EquationResult:
             issue = (first.glyph_diffs + first.visual_diffs + [first.parse_error or ""])[0]
             return f"First reading was corrected after a check found: {issue}"
         if self.status == AI_READ:
-            base = "No glyph layer (Channel B) was available on this page, so Channel A's reading is reported but not proven."
+            base = "No glyph layer (Channel B) was available on this page, so Channel A's reading is reported but not independently verified."
             if self.cautions:
                 base += " Caution: " + "; ".join(self.cautions)
             return base
@@ -122,8 +122,8 @@ class EquationResult:
             return "Corrected after checking."
         if self.status == AI_READ:
             if self.cautions:
-                return "AI reading, not proven against the source. A check flagged something here."
-            return "AI reading, not proven against the source."
+                return "AI reading, not independently verified against the source. A check flagged something here."
+            return "AI reading, not independently verified against the source."
         return "Couldn't be confirmed, so it isn't read as math."
 
     @property

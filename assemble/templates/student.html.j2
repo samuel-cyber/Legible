@@ -44,7 +44,7 @@
 <main id="content">
   <header>
     <h1>{{ title }}</h1>
-    <p>{{ summary.total }} equations: {{ summary.verified }} verified, {{ summary.repaired }} repaired{% if summary.ai_read %}, {{ summary.ai_read }} AI-read (not proven){% endif %}, {{ summary.withheld }} not verified.</p>
+    <p>{{ summary.total }} equations: {{ summary.verified }} verified, {{ summary.repaired }} repaired{% if summary.ai_read %}, {{ summary.ai_read }} AI-read (not independently verified){% endif %}, {{ summary.withheld }} not verified.</p>
   </header>
   {% for b in blocks %}
     {% if b.kind == "heading" %}
@@ -61,7 +61,7 @@
           <p class="status">{% if r.status == "verified" %}Verified against the PDF{% else %}Corrected and verified{% endif %}</p>
         {% elif r.status == "ai_read" %}
           {{ mathml[b.eq_id] | safe }}
-          <p class="status">AI reading, not proven against the source{% if r.cautions %} — a check flagged something here{% endif %}</p>
+          <p class="status">AI reading, not independently verified against the source{% if r.cautions %} — a check flagged something here{% endif %}</p>
         {% else %}
           <p><strong>Unverified equation.</strong> Legible could not confirm this equation, so it is not read as math. Text found in the PDF, unverified: <span class="raw">{{ r.raw_text }}</span></p>
           <p class="status">Not verified: check with your lecturer or a sighted helper</p>

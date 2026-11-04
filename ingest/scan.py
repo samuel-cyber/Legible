@@ -1,7 +1,7 @@
 """Detection and support code for scanned / handwritten pages.
 
 A second, clearly lower trust tier: these pages have no stored characters, so
-anything read on them can be reported but never proven against the source.
+anything read on them can be reported but never independently verified against the source.
 Everything here only ever feeds the new "ai_read" path in
 ``equations.decide``; it is never called for a page that has a usable glyph
 layer, so it cannot change behaviour for born-digital pages.
