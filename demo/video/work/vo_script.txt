@@ -1,0 +1,8 @@
+1|A typical screen reader turns equations into a jumble of stray characters a student cannot act on.
+2|Live, on a real lecture PDF: Muse Spark reads this norm as two plain bars. Legible catches the mismatch against the PDF's own text, asks for a second look, and confirms the correction before publishing anything.
+3|The upload page is also the landing page. Click try a sample lecture, and equations are checked live, each landing with a plain verdict, until the summary appears.
+4|To prove the repair loop, this error was deliberately injected: a missing minus sign. Legible disagrees with the source, re-reads with the exact difference, and confirms the fix.
+5|After Legible, the same equation reads cleanly: independently verified against the source, structure and all.
+6|On a handwritten page there's nothing stored to check against, so every reading is labelled plainly: A I reading, not independently verified.
+7|152 equations from real lecture notes. Zero incorrect equations published. All 303 injected test errors caught. 3 real Muse Spark misreadings caught. 23.7 percent withheld rather than risk a guess.
+8|Legible. When it can't verify an equation, it refuses to guess.

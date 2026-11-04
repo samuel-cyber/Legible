@@ -1,0 +1,39 @@
+1
+00:00:00,000 --> 00:00:06,150
+A typical screen reader turns equations into
+a jumble of stray characters.
+
+2
+00:00:06,150 --> 00:00:21,340
+Muse Spark reads this norm as two plain bars.
+Legible catches it and confirms the fix.
+
+3
+00:00:21,340 --> 00:00:32,780
+Click "Try a sample lecture" - equations are
+checked live, each with a plain verdict.
+
+4
+00:00:32,780 --> 00:00:44,940
+This error was deliberately injected: a missing
+minus sign. Legible catches it and fixes it.
+
+5
+00:00:44,940 --> 00:00:52,580
+After Legible: the same equation reads cleanly,
+independently verified against the source.
+
+6
+00:00:52,580 --> 00:01:01,850
+No stored text on a handwritten page, so every
+reading is labelled: AI reading, not verified.
+
+7
+00:01:01,850 --> 00:01:19,940
+152 equations, 0 wrong, 303/303 injected errors
+caught, 3 real misreadings, 23.7 percent withheld.
+
+8
+00:01:19,940 --> 00:01:25,580
+Legible - when it can't verify an equation,
+it refuses to guess.
