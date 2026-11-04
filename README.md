@@ -30,11 +30,23 @@ The decision rule depends on whether the glyph layer exists:
 - **Repaired / Withheld**: as above, driven by C instead of B.
 - **Withheld (fail-closed)**: C errors or returns unparseable output counts as a failure, so the equation is withheld rather than trusted.
 
-Why: measured against real runs, C is a much weaker signal than the exact, deterministic glyph layer. Two different renderers never agree on letterforms, so C misses or invents differences. Letting an over-eager (or unavailable) C withhold a reading that provably matches the PDF's own characters only produces false rejects. When B is absent there is nothing exact to fall back on, so C is used as a gate and still fails closed.
+Why: measured against real runs, C is a much weaker signal than the exact, deterministic glyph layer. Two different renderers never agree on letterforms, so C misses or invents differences. Letting an over-eager (or unavailable) C withhold a reading that is independently verified against the PDF's own characters only produces false rejects. When B is absent there is nothing exact to fall back on, so C is used as a gate and still fails closed.
 
 Either way, a model error in A means withheld; a model error in C can never, on its own, cause a verification.
 
 The variable glossary under each equation is quoted verbatim from the document's own "where ..." sentence.
+
+### Ask about this equation
+
+Every verified or repaired equation on the student page has a labelled
+"Ask about this equation" box. It answers from that equation's own verified
+token structure only — numerator/denominator, the exponent or subscript of
+a symbol, what's inside a bracket, a slow one-part-at-a-time reading, or a
+symbol's meaning from the quoted glossary — and nothing else: no model call
+is made anywhere in this feature (`equations/ask.py`), and a question it
+can't parse gets a fixed refusal rather than a guess. It never appears on a
+withheld equation, because there's no independently-verified structure to
+answer from.
 
 ## Run
 
